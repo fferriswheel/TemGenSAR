@@ -19,6 +19,8 @@
 
 本次迁移没有在本机安装整个 GPU 环境，也没有重跑训练。Windows 本机的 Python 3.9 环境只用于备份整理、源码检查及能够运行的原有测试；验证范围见 [迁移说明](../docs/migration.md)。
 
+后续模型筛选阶段另使用本机已有的 Python 3.12 / PyTorch 2.6.0+cu118 / Transformers 4.52.3 环境，完成模型和 SID 文件核对、代表性 checkpoint 的本地加载与前向计算。v5 tokenizer 配置在 v4 下的显式兼容参数写在 Hugging Face 模型卡中；没有修改原始模型文件，也没有重跑检索评估。详情见 [模型筛选](../docs/model-selection.md)。
+
 ## 原路径
 
 | 原服务器路径 | 本仓库相对路径 |

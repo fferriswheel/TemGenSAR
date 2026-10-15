@@ -7,6 +7,7 @@
 ## 从哪里开始
 
 - [最新研究进展与入口](docs/research-status.md)
+- [最新模型的筛选依据与取舍](docs/model-selection.md)
 - [模型、数据的存储与恢复](docs/storage.md)
 - [环境与运行路径](environment/README.md)
 - [完整模型/张量清单](assets/model_files.tsv)
@@ -51,6 +52,8 @@ python -m pytest Search_Reconmendation/stage3/tests -q
 ## 代码与大文件
 
 GitHub 保存源码、配置、实验说明和选定的汇总指标。模型权重、训练输入、SID 映射、embedding、逐样本预测、日志、缓存和备份压缩包保存在原备份中。
+
+精选的 **10 个 MovieLens-25M 下游 checkpoint 与配套 SID** 已上传到 [Ferriswheel1412/TemGenSAR-MovieLens25M](https://huggingface.co/Ferriswheel1412/TemGenSAR-MovieLens25M) 私有模型仓库，固定 revision 为 `947652476014c1a04ba6b3d59e27896b7adc804d`。主候选为 TASR-B，同时保留 TASR-A、Frozen 三 seed 和共同 t0；[筛选说明](docs/model-selection.md)包含效果、取舍和按需下载方法。访问私有仓库需要有权限的 Hugging Face 账号。
 
 两份压缩包已于 2026-10-15 通过 SHA-256 校验。`assets/archives.json` 固定文件名和校验值；`backup_manifest.tsv` 标明每个资产应从完整包还是增量包恢复。模型记录中的 `.pt` / `.pth` 也可能是 embedding 或其他张量，须结合文件名和实验记录判断用途。
 

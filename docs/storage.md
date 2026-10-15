@@ -5,7 +5,7 @@
 | 内容 | 本次位置 | 后续建议 |
 | --- | --- | --- |
 | 源码、配置、实验说明、汇总指标 | GitHub | 持续用 Git 管理 |
-| 最终模型、LoRA、配套 tokenizer / config / SID | 原始备份 | 挑选后放 Hugging Face 模型仓库 |
+| 最终模型、LoRA、配套 tokenizer / config / SID | 原始备份；首批精选模型已有 HF 私有副本 | 持续记录模型 revision 与源码版本 |
 | 原始数据、预处理数据、embedding | 原始备份 | 独立数据存储；可分发部分可用 HF Dataset |
 | 所有历史实验和完整服务器备份 | 原始备份 | 备份盘及对象存储，例如 OSS / COS / S3 |
 
@@ -32,6 +32,8 @@ cjk_incremental_20260908_postwork.tar.zst
 ```
 
 它们仍是完整恢复的主要副本；代码整理没有删除或重写这些备份。
+
+首批精选的 10 个 MovieLens-25M 下游 checkpoint 和配套 SID 已于 2026-10-15 上传到 [私有模型仓库](https://huggingface.co/Ferriswheel1412/TemGenSAR-MovieLens25M)，90 个文件的远端内容哈希验证通过。完整筛选依据、固定 revision 和按需下载代码见 [模型筛选](model-selection.md)。其他历史模型和完整训练数据仍仅保留在原备份中。
 
 ## 按需恢复一个模型
 
@@ -92,4 +94,4 @@ api.upload_folder(
 )
 ```
 
-上传成功后，在代码仓库新增一条模型记录，保存 `repo_id`、固定的 revision commit、所需文件路径及 SHA-256，让不同代码版本能找回相匹配的权重和 SID。此次仅准备清单和指引，没有创建 HF 仓库或上传大文件。[HF CLI](https://huggingface.co/docs/huggingface_hub/guides/cli)、[上传 API](https://huggingface.co/docs/huggingface_hub/guides/upload)。
+上传成功后，在代码仓库新增一条模型记录，保存 `repo_id`、固定的 revision commit、所需文件路径及 SHA-256，让不同代码版本能找回相匹配的权重和 SID。首批已上传模型的记录位于 [`assets/selected_models.json`](../assets/selected_models.json)；上面的 API 代码是后续整理新发布包的通用示例。[HF CLI](https://huggingface.co/docs/huggingface_hub/guides/cli)、[上传 API](https://huggingface.co/docs/huggingface_hub/guides/upload)。
