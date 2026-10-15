@@ -1,0 +1,417 @@
+{
+  "score": "abs(rank_left-rank_right)*sqrt(right_events)",
+  "transitions": {
+    "W0_W1": {
+      "eligible_items": 6114,
+      "left_events": 206072,
+      "right_events": 521758,
+      "budgets": {
+        "75": {
+          "detector": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W0_W1/detector_k75.csv",
+            "selected": 75,
+            "mean_detector_score": 8.574564315204668,
+            "right_events": 14730
+          },
+          "support": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W0_W1/support_k75.csv",
+            "selected": 75,
+            "mean_detector_score": 2.6670834195175206,
+            "right_events": 29859
+          },
+          "random_seed2024": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W0_W1/random_seed2024_k75.csv",
+            "selected": 75,
+            "mean_detector_score": 1.1330716670516912,
+            "right_events": 3640
+          },
+          "random_seed2025": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W0_W1/random_seed2025_k75.csv",
+            "selected": 75,
+            "mean_detector_score": 1.2808612906560277,
+            "right_events": 2431
+          },
+          "random_seed2026": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W0_W1/random_seed2026_k75.csv",
+            "selected": 75,
+            "mean_detector_score": 1.4643003767822271,
+            "right_events": 4709
+          }
+        },
+        "150": {
+          "detector": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W0_W1/detector_k150.csv",
+            "selected": 150,
+            "mean_detector_score": 7.1335808226871995,
+            "right_events": 23384
+          },
+          "support": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W0_W1/support_k150.csv",
+            "selected": 150,
+            "mean_detector_score": 2.8267181175119047,
+            "right_events": 47136
+          },
+          "random_seed2024": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W0_W1/random_seed2024_k150.csv",
+            "selected": 150,
+            "mean_detector_score": 1.2865712083413912,
+            "right_events": 7540
+          },
+          "random_seed2025": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W0_W1/random_seed2025_k150.csv",
+            "selected": 150,
+            "mean_detector_score": 1.4325061454636656,
+            "right_events": 5228
+          },
+          "random_seed2026": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W0_W1/random_seed2026_k150.csv",
+            "selected": 150,
+            "mean_detector_score": 1.532475163256585,
+            "right_events": 7627
+          }
+        },
+        "300": {
+          "detector": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W0_W1/detector_k300.csv",
+            "selected": 300,
+            "mean_detector_score": 5.703209720744416,
+            "right_events": 38586
+          },
+          "support": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W0_W1/support_k300.csv",
+            "selected": 300,
+            "mean_detector_score": 2.9208070642396917,
+            "right_events": 71423
+          },
+          "random_seed2024": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W0_W1/random_seed2024_k300.csv",
+            "selected": 300,
+            "mean_detector_score": 1.343426380573061,
+            "right_events": 13683
+          },
+          "random_seed2025": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W0_W1/random_seed2025_k300.csv",
+            "selected": 300,
+            "mean_detector_score": 1.478677698012835,
+            "right_events": 11276
+          },
+          "random_seed2026": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W0_W1/random_seed2026_k300.csv",
+            "selected": 300,
+            "mean_detector_score": 1.4368581045130466,
+            "right_events": 12985
+          }
+        }
+      }
+    },
+    "W1_W2": {
+      "eligible_items": 7983,
+      "left_events": 521758,
+      "right_events": 308569,
+      "budgets": {
+        "75": {
+          "detector": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W1_W2/detector_k75.csv",
+            "selected": 75,
+            "mean_detector_score": 8.651452934978408,
+            "right_events": 11315
+          },
+          "support": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W1_W2/support_k75.csv",
+            "selected": 75,
+            "mean_detector_score": 3.183335406337666,
+            "right_events": 22464
+          },
+          "random_seed2024": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W1_W2/random_seed2024_k75.csv",
+            "selected": 75,
+            "mean_detector_score": 1.0049793634411146,
+            "right_events": 1791
+          },
+          "random_seed2025": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W1_W2/random_seed2025_k75.csv",
+            "selected": 75,
+            "mean_detector_score": 1.1885602352813347,
+            "right_events": 2095
+          },
+          "random_seed2026": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W1_W2/random_seed2026_k75.csv",
+            "selected": 75,
+            "mean_detector_score": 0.9722256667715548,
+            "right_events": 1828
+          }
+        },
+        "150": {
+          "detector": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W1_W2/detector_k150.csv",
+            "selected": 150,
+            "mean_detector_score": 6.92083841026382,
+            "right_events": 16639
+          },
+          "support": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W1_W2/support_k150.csv",
+            "selected": 150,
+            "mean_detector_score": 2.6541170385855337,
+            "right_events": 35149
+          },
+          "random_seed2024": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W1_W2/random_seed2024_k150.csv",
+            "selected": 150,
+            "mean_detector_score": 0.9779560090750203,
+            "right_events": 3996
+          },
+          "random_seed2025": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W1_W2/random_seed2025_k150.csv",
+            "selected": 150,
+            "mean_detector_score": 1.0431929323569262,
+            "right_events": 3987
+          },
+          "random_seed2026": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W1_W2/random_seed2026_k150.csv",
+            "selected": 150,
+            "mean_detector_score": 1.0199849410719644,
+            "right_events": 3802
+          }
+        },
+        "300": {
+          "detector": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W1_W2/detector_k300.csv",
+            "selected": 300,
+            "mean_detector_score": 5.366464361465105,
+            "right_events": 23687
+          },
+          "support": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W1_W2/support_k300.csv",
+            "selected": 300,
+            "mean_detector_score": 2.326735778712386,
+            "right_events": 52315
+          },
+          "random_seed2024": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W1_W2/random_seed2024_k300.csv",
+            "selected": 300,
+            "mean_detector_score": 0.8545659980162461,
+            "right_events": 7593
+          },
+          "random_seed2025": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W1_W2/random_seed2025_k300.csv",
+            "selected": 300,
+            "mean_detector_score": 0.8730088308178083,
+            "right_events": 7445
+          },
+          "random_seed2026": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W1_W2/random_seed2026_k300.csv",
+            "selected": 300,
+            "mean_detector_score": 1.0019352273793372,
+            "right_events": 7251
+          }
+        }
+      }
+    },
+    "W2_W3": {
+      "eligible_items": 5084,
+      "left_events": 308569,
+      "right_events": 138047,
+      "budgets": {
+        "75": {
+          "detector": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W2_W3/detector_k75.csv",
+            "selected": 75,
+            "mean_detector_score": 2.9136787771758375,
+            "right_events": 6573
+          },
+          "support": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W2_W3/support_k75.csv",
+            "selected": 75,
+            "mean_detector_score": 0.8019705372560074,
+            "right_events": 18571
+          },
+          "random_seed2024": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W2_W3/random_seed2024_k75.csv",
+            "selected": 75,
+            "mean_detector_score": 0.4763209984202941,
+            "right_events": 1833
+          },
+          "random_seed2025": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W2_W3/random_seed2025_k75.csv",
+            "selected": 75,
+            "mean_detector_score": 0.507807300474602,
+            "right_events": 2031
+          },
+          "random_seed2026": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W2_W3/random_seed2026_k75.csv",
+            "selected": 75,
+            "mean_detector_score": 0.4906401254192505,
+            "right_events": 1328
+          }
+        },
+        "150": {
+          "detector": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W2_W3/detector_k150.csv",
+            "selected": 150,
+            "mean_detector_score": 2.433985030639447,
+            "right_events": 9823
+          },
+          "support": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W2_W3/support_k150.csv",
+            "selected": 150,
+            "mean_detector_score": 0.7843577386857403,
+            "right_events": 29129
+          },
+          "random_seed2024": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W2_W3/random_seed2024_k150.csv",
+            "selected": 150,
+            "mean_detector_score": 0.5161646329609999,
+            "right_events": 3457
+          },
+          "random_seed2025": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W2_W3/random_seed2025_k150.csv",
+            "selected": 150,
+            "mean_detector_score": 0.49949054351320343,
+            "right_events": 3460
+          },
+          "random_seed2026": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W2_W3/random_seed2026_k150.csv",
+            "selected": 150,
+            "mean_detector_score": 0.5252667449026598,
+            "right_events": 2935
+          }
+        },
+        "300": {
+          "detector": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W2_W3/detector_k300.csv",
+            "selected": 300,
+            "mean_detector_score": 2.0104867134564994,
+            "right_events": 15650
+          },
+          "support": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W2_W3/support_k300.csv",
+            "selected": 300,
+            "mean_detector_score": 0.762991407621134,
+            "right_events": 43490
+          },
+          "random_seed2024": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W2_W3/random_seed2024_k300.csv",
+            "selected": 300,
+            "mean_detector_score": 0.49242714242163593,
+            "right_events": 7814
+          },
+          "random_seed2025": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W2_W3/random_seed2025_k300.csv",
+            "selected": 300,
+            "mean_detector_score": 0.4759614385123024,
+            "right_events": 6511
+          },
+          "random_seed2026": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W2_W3/random_seed2026_k300.csv",
+            "selected": 300,
+            "mean_detector_score": 0.531179489040315,
+            "right_events": 5867
+          }
+        }
+      }
+    },
+    "W3_W4": {
+      "eligible_items": 2784,
+      "left_events": 138047,
+      "right_events": 57664,
+      "budgets": {
+        "75": {
+          "detector": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W3_W4/detector_k75.csv",
+            "selected": 75,
+            "mean_detector_score": 1.5716275375383044,
+            "right_events": 1812
+          },
+          "support": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W3_W4/support_k75.csv",
+            "selected": 75,
+            "mean_detector_score": 0.28450499544678676,
+            "right_events": 7452
+          },
+          "random_seed2024": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W3_W4/random_seed2024_k75.csv",
+            "selected": 75,
+            "mean_detector_score": 0.33423909434111126,
+            "right_events": 1144
+          },
+          "random_seed2025": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W3_W4/random_seed2025_k75.csv",
+            "selected": 75,
+            "mean_detector_score": 0.3596990560180661,
+            "right_events": 1081
+          },
+          "random_seed2026": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W3_W4/random_seed2026_k75.csv",
+            "selected": 75,
+            "mean_detector_score": 0.2829493786741235,
+            "right_events": 1089
+          }
+        },
+        "150": {
+          "detector": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W3_W4/detector_k150.csv",
+            "selected": 150,
+            "mean_detector_score": 1.2830082233342806,
+            "right_events": 3153
+          },
+          "support": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W3_W4/support_k150.csv",
+            "selected": 150,
+            "mean_detector_score": 0.2565159785324926,
+            "right_events": 11075
+          },
+          "random_seed2024": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W3_W4/random_seed2024_k150.csv",
+            "selected": 150,
+            "mean_detector_score": 0.3254608087133669,
+            "right_events": 2163
+          },
+          "random_seed2025": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W3_W4/random_seed2025_k150.csv",
+            "selected": 150,
+            "mean_detector_score": 0.33250275273058144,
+            "right_events": 2019
+          },
+          "random_seed2026": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W3_W4/random_seed2026_k150.csv",
+            "selected": 150,
+            "mean_detector_score": 0.30092267448474824,
+            "right_events": 2110
+          }
+        },
+        "300": {
+          "detector": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W3_W4/detector_k300.csv",
+            "selected": 300,
+            "mean_detector_score": 1.0230838755054805,
+            "right_events": 5503
+          },
+          "support": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W3_W4/support_k300.csv",
+            "selected": 300,
+            "mean_detector_score": 0.3024406601151441,
+            "right_events": 16079
+          },
+          "random_seed2024": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W3_W4/random_seed2024_k300.csv",
+            "selected": 300,
+            "mean_detector_score": 0.3197154072196026,
+            "right_events": 5154
+          },
+          "random_seed2025": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W3_W4/random_seed2025_k300.csv",
+            "selected": 300,
+            "mean_detector_score": 0.3045299809383158,
+            "right_events": 4311
+          },
+          "random_seed2026": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/kuaisar_rec_drift_detector_v1/W3_W4/random_seed2026_k300.csv",
+            "selected": 300,
+            "mean_detector_score": 0.3100108409436598,
+            "right_events": 4528
+          }
+        }
+      }
+    }
+  }
+}

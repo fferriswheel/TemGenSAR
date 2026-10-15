@@ -1,0 +1,93 @@
+{
+  "protocol": {
+    "base": "stage3/runs/temporal_incremental/CRD_W6_V3_A1_R1_s2024",
+    "adapter": "rank-8 q/v LoRA over frozen R1",
+    "trainable_parameters": 294912,
+    "affected_rec_rows": 5344,
+    "unchanged_replay_rows": 4000,
+    "rec_alignment_occurrences": 1800,
+    "seed": 2024
+  },
+  "gate": {
+    "overall_rec_improves": false,
+    "recoded_target_improves": false,
+    "search_result_byte_identical": true,
+    "passed": false
+  },
+  "overall": [
+    {
+      "method": "R1",
+      "task": "rec",
+      "hit10": 0.0314,
+      "ndcg10": 0.020111266021682297
+    },
+    {
+      "method": "R1",
+      "task": "search",
+      "hit10": 0.04,
+      "ndcg10": 0.02158546049540906
+    },
+    {
+      "method": "TaskLocalRec",
+      "task": "rec",
+      "hit10": 0.031,
+      "ndcg10": 0.019736006770139248
+    },
+    {
+      "method": "TaskLocalRec",
+      "task": "search",
+      "hit10": 0.04,
+      "ndcg10": 0.02158546049540906
+    }
+  ],
+  "rec_subgroups": [
+    {
+      "method": "R1",
+      "group": "all",
+      "samples": 5000,
+      "distinct_items": 3140,
+      "hit10": 0.0314,
+      "ndcg10": 0.020111266021682308
+    },
+    {
+      "method": "R1",
+      "group": "recoded_target",
+      "samples": 297,
+      "distinct_items": 30,
+      "hit10": 0.06734006734006734,
+      "ndcg10": 0.06261007690396043
+    },
+    {
+      "method": "R1",
+      "group": "unchanged_target",
+      "samples": 4703,
+      "distinct_items": 3110,
+      "hit10": 0.029130342334679992,
+      "ndcg10": 0.0174274159617128
+    },
+    {
+      "method": "TaskLocalRec",
+      "group": "all",
+      "samples": 5000,
+      "distinct_items": 3140,
+      "hit10": 0.031,
+      "ndcg10": 0.019736006770139262
+    },
+    {
+      "method": "TaskLocalRec",
+      "group": "recoded_target",
+      "samples": 297,
+      "distinct_items": 30,
+      "hit10": 0.06734006734006734,
+      "ndcg10": 0.06261007690396043
+    },
+    {
+      "method": "TaskLocalRec",
+      "group": "unchanged_target",
+      "samples": 4703,
+      "distinct_items": 3110,
+      "hit10": 0.02870508186264087,
+      "ndcg10": 0.017028458645592184
+    }
+  ]
+}

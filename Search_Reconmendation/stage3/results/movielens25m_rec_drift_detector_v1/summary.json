@@ -1,0 +1,108 @@
+{
+  "score": "abs(rank_left-rank_right)*sqrt(right_events)",
+  "transitions": {
+    "W0_W1": {
+      "eligible_items": 3991,
+      "left_events": 8721602,
+      "right_events": 246181,
+      "budgets": {
+        "75": {
+          "detector": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/movielens25m_rec_drift_detector_v1/W0_W1/detector_k75.csv",
+            "selected": 75,
+            "mean_detector_score": 3.743723071436025,
+            "right_events": 16433
+          },
+          "support": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/movielens25m_rec_drift_detector_v1/W0_W1/support_k75.csv",
+            "selected": 75,
+            "mean_detector_score": 1.1114700129979358,
+            "right_events": 65005
+          },
+          "random_seed2024": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/movielens25m_rec_drift_detector_v1/W0_W1/random_seed2024_k75.csv",
+            "selected": 75,
+            "mean_detector_score": 0.5140304081712687,
+            "right_events": 4584
+          },
+          "random_seed2025": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/movielens25m_rec_drift_detector_v1/W0_W1/random_seed2025_k75.csv",
+            "selected": 75,
+            "mean_detector_score": 0.45596160641733197,
+            "right_events": 5196
+          },
+          "random_seed2026": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/movielens25m_rec_drift_detector_v1/W0_W1/random_seed2026_k75.csv",
+            "selected": 75,
+            "mean_detector_score": 0.49778672109097594,
+            "right_events": 4510
+          }
+        },
+        "150": {
+          "detector": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/movielens25m_rec_drift_detector_v1/W0_W1/detector_k150.csv",
+            "selected": 150,
+            "mean_detector_score": 2.688169894011839,
+            "right_events": 23719
+          },
+          "support": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/movielens25m_rec_drift_detector_v1/W0_W1/support_k150.csv",
+            "selected": 150,
+            "mean_detector_score": 0.8326194073460103,
+            "right_events": 96473
+          },
+          "random_seed2024": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/movielens25m_rec_drift_detector_v1/W0_W1/random_seed2024_k150.csv",
+            "selected": 150,
+            "mean_detector_score": 0.5013057200645044,
+            "right_events": 7798
+          },
+          "random_seed2025": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/movielens25m_rec_drift_detector_v1/W0_W1/random_seed2025_k150.csv",
+            "selected": 150,
+            "mean_detector_score": 0.4192330933649446,
+            "right_events": 10614
+          },
+          "random_seed2026": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/movielens25m_rec_drift_detector_v1/W0_W1/random_seed2026_k150.csv",
+            "selected": 150,
+            "mean_detector_score": 0.4981870604088137,
+            "right_events": 7707
+          }
+        },
+        "300": {
+          "detector": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/movielens25m_rec_drift_detector_v1/W0_W1/detector_k300.csv",
+            "selected": 300,
+            "mean_detector_score": 1.8871557213376149,
+            "right_events": 35492
+          },
+          "support": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/movielens25m_rec_drift_detector_v1/W0_W1/support_k300.csv",
+            "selected": 300,
+            "mean_detector_score": 0.7644991225731798,
+            "right_events": 131264
+          },
+          "random_seed2024": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/movielens25m_rec_drift_detector_v1/W0_W1/random_seed2024_k300.csv",
+            "selected": 300,
+            "mean_detector_score": 0.544122356189747,
+            "right_events": 20844
+          },
+          "random_seed2025": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/movielens25m_rec_drift_detector_v1/W0_W1/random_seed2025_k300.csv",
+            "selected": 300,
+            "mean_detector_score": 0.4954595176494945,
+            "right_events": 19746
+          },
+          "random_seed2026": {
+            "path": "/data/cjk/Search_Reconmendation/stage3/results/movielens25m_rec_drift_detector_v1/W0_W1/random_seed2026_k300.csv",
+            "selected": 300,
+            "mean_detector_score": 0.49055829281935154,
+            "right_events": 16932
+          }
+        }
+      }
+    }
+  }
+}

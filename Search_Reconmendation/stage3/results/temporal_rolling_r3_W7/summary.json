@@ -1,0 +1,97 @@
+{
+  "runs": [
+    {
+      "method": "Fixed",
+      "seed": 2024,
+      "val_rec_ndcg5": 0.018890177158521648,
+      "val_search_ndcg5": 0.01768471558998941,
+      "val_mean_ndcg5": 0.018287446374255528,
+      "rec_hit10": 0.0324,
+      "rec_ndcg10": 0.0203031485930033,
+      "search_hit10": 0.0434,
+      "search_ndcg10": 0.02369549184874743,
+      "run_dir": "stage3/runs/temporal_incremental/R3_W7_Fixed_s2024"
+    },
+    {
+      "method": "Random",
+      "seed": 2024,
+      "val_rec_ndcg5": 0.018624658199355208,
+      "val_search_ndcg5": 0.01755260390564869,
+      "val_mean_ndcg5": 0.018088631052501948,
+      "rec_hit10": 0.0324,
+      "rec_ndcg10": 0.02030861710102147,
+      "search_hit10": 0.044,
+      "search_ndcg10": 0.02369161626410323,
+      "run_dir": "stage3/runs/temporal_incremental/R3_W7_Random_s2024"
+    },
+    {
+      "method": "Selective",
+      "seed": 2024,
+      "val_rec_ndcg5": 0.018156522048124568,
+      "val_search_ndcg5": 0.01613543590060023,
+      "val_mean_ndcg5": 0.0171459789743624,
+      "rec_hit10": 0.0332,
+      "rec_ndcg10": 0.0209807741931328,
+      "search_hit10": 0.0432,
+      "search_ndcg10": 0.023158978206678296,
+      "run_dir": "stage3/runs/temporal_incremental/R3_W7_Selective_s2024"
+    }
+  ],
+  "summary": {
+    "Fixed": {
+      "rec_hit10": {
+        "mean": 0.0324,
+        "std": NaN
+      },
+      "rec_ndcg10": {
+        "mean": 0.0203031485930033,
+        "std": NaN
+      },
+      "search_hit10": {
+        "mean": 0.0434,
+        "std": NaN
+      },
+      "search_ndcg10": {
+        "mean": 0.02369549184874743,
+        "std": NaN
+      }
+    },
+    "Random": {
+      "rec_hit10": {
+        "mean": 0.0324,
+        "std": NaN
+      },
+      "rec_ndcg10": {
+        "mean": 0.02030861710102147,
+        "std": NaN
+      },
+      "search_hit10": {
+        "mean": 0.044,
+        "std": NaN
+      },
+      "search_ndcg10": {
+        "mean": 0.02369161626410323,
+        "std": NaN
+      }
+    },
+    "Selective": {
+      "rec_hit10": {
+        "mean": 0.0332,
+        "std": NaN
+      },
+      "rec_ndcg10": {
+        "mean": 0.0209807741931328,
+        "std": NaN
+      },
+      "search_hit10": {
+        "mean": 0.0432,
+        "std": NaN
+      },
+      "search_ndcg10": {
+        "mean": 0.023158978206678296,
+        "std": NaN
+      }
+    }
+  },
+  "paired_differences": []
+}

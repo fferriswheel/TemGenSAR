@@ -1,0 +1,71 @@
+{
+  "benchmark": "MovieLens25M_18K_FixedCatalog_Temporal_SearchRec_v1",
+  "status": "pilot_complete",
+  "catalog_items": 18191,
+  "t0_cutoff": "2015-01-01",
+  "future_windows": 10,
+  "window_width": "six_months",
+  "search_policy": "stationary_synthetic_control",
+  "sid": {
+    "structure": "[shared_1,shared_2|task_1,task_2]",
+    "codebook_sizes": [256, 256, 256, 256],
+    "t0_search_collision_fraction": 0.0,
+    "t0_rec_collision_fraction": 0.0,
+    "update_transition": "W0_to_W1",
+    "detector_selected_items": 150,
+    "changed_rec_sid_items": 23,
+    "changed_catalog_fraction": 0.001264361497443791,
+    "prefix_preserved": true,
+    "search_sid_preserved": true,
+    "updated_rec_collision_fraction": 0.0,
+    "rec_adapter_trainable_parameters": 14528,
+    "rec_adapter_wall_seconds": 7.824442990124226
+  },
+  "downstream": {
+    "candidate_count": 100,
+    "backbone": "T5-small",
+    "w1_update_rec_rows": 43882,
+    "search_replay_rows": 1000,
+    "alignment_items": 23,
+    "epochs": 1,
+    "optimizer_steps": 351,
+    "dynamic_wall_seconds": 275.4,
+    "fixed_control_wall_seconds": 276.82
+  },
+  "w2_results": {
+    "frozen_t0_sid_and_model": {
+      "rec_hit@10": 0.4471464019851117,
+      "rec_ndcg@10": 0.28511750601460106,
+      "search_hit@10": 0.709,
+      "search_ndcg@10": 0.4616059060136639
+    },
+    "updated_sid_without_t5_alignment": {
+      "rec_hit@10": 0.4471464019851117,
+      "rec_ndcg@10": 0.2847344788060355,
+      "search_hit@10": 0.709,
+      "search_ndcg@10": 0.4616059060136639
+    },
+    "dynamic_sid_with_matched_incremental_training": {
+      "rec_hit@10": 0.45161290322580644,
+      "rec_ndcg@10": 0.2858852517416429,
+      "search_hit@10": 0.7064,
+      "search_ndcg@10": 0.459960096694391
+    },
+    "fixed_sid_with_matched_incremental_training": {
+      "rec_hit@10": 0.45161290322580644,
+      "rec_ndcg@10": 0.28617630353255374,
+      "search_hit@10": 0.7064,
+      "search_ndcg@10": 0.460117881497554
+    }
+  },
+  "changed_item_slice_w2": {
+    "rows": 237,
+    "frozen_rec_hit@10": 0.088608,
+    "frozen_rec_ndcg@10": 0.03711,
+    "dynamic_rec_hit@10": 0.088608,
+    "dynamic_rec_ndcg@10": 0.035541,
+    "fixed_control_rec_hit@10": 0.088608,
+    "fixed_control_rec_ndcg@10": 0.038785
+  },
+  "conclusion": "The benchmark and selective update pipeline are viable, but the first K150/sticky0.1 SID update does not outperform matched fixed-SID incremental training on W2."
+}

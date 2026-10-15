@@ -1,0 +1,160 @@
+{
+  "runs": [
+    {
+      "method": "J0",
+      "seed": 42,
+      "val_rec_ndcg5": 0.03812267632761727,
+      "val_search_ndcg5": 0.041907241661970976,
+      "val_mean_ndcg5": 0.040014958994794125,
+      "rec_hit10": 0.0524,
+      "rec_ndcg10": 0.02991918835436663,
+      "search_hit10": 0.0772,
+      "search_ndcg10": 0.040380993235925616,
+      "run_dir": "stage3/runs/temporal_incremental/R2B_L_J0_jointupdate_s42"
+    },
+    {
+      "method": "J0",
+      "seed": 2024,
+      "val_rec_ndcg5": 0.038142828244916126,
+      "val_search_ndcg5": 0.041610545113661704,
+      "val_mean_ndcg5": 0.03987668667928891,
+      "rec_hit10": 0.0522,
+      "rec_ndcg10": 0.029488206569469072,
+      "search_hit10": 0.0772,
+      "search_ndcg10": 0.04038987736695045,
+      "run_dir": "stage3/runs/temporal_incremental/R2B_L_J0_jointupdate_s2024"
+    },
+    {
+      "method": "J0",
+      "seed": 2025,
+      "val_rec_ndcg5": 0.038031441077785055,
+      "val_search_ndcg5": 0.042268879344636766,
+      "val_mean_ndcg5": 0.040150160211210914,
+      "rec_hit10": 0.0522,
+      "rec_ndcg10": 0.02946441268884022,
+      "search_hit10": 0.0772,
+      "search_ndcg10": 0.04066909843941703,
+      "run_dir": "stage3/runs/temporal_incremental/R2B_L_J0_jointupdate_s2025"
+    },
+    {
+      "method": "JB",
+      "seed": 42,
+      "val_rec_ndcg5": 0.040931533432821576,
+      "val_search_ndcg5": 0.043733427612685255,
+      "val_mean_ndcg5": 0.042332480522753416,
+      "rec_hit10": 0.0528,
+      "rec_ndcg10": 0.03249310625799011,
+      "search_hit10": 0.077,
+      "search_ndcg10": 0.04073953308352644,
+      "run_dir": "stage3/runs/temporal_incremental/R2B_L_JB_jointupdate_s42"
+    },
+    {
+      "method": "JB",
+      "seed": 2024,
+      "val_rec_ndcg5": 0.04051317813707717,
+      "val_search_ndcg5": 0.0437905380920719,
+      "val_mean_ndcg5": 0.04215185811457454,
+      "rec_hit10": 0.0522,
+      "rec_ndcg10": 0.032053219291066026,
+      "search_hit10": 0.077,
+      "search_ndcg10": 0.040922652624248865,
+      "run_dir": "stage3/runs/temporal_incremental/R2B_L_JB_jointupdate_s2024"
+    },
+    {
+      "method": "JB",
+      "seed": 2025,
+      "val_rec_ndcg5": 0.04085535016207065,
+      "val_search_ndcg5": 0.044234036943543706,
+      "val_mean_ndcg5": 0.042544693552807177,
+      "rec_hit10": 0.0518,
+      "rec_ndcg10": 0.03192236666950826,
+      "search_hit10": 0.0768,
+      "search_ndcg10": 0.040935581091162285,
+      "run_dir": "stage3/runs/temporal_incremental/R2B_L_JB_jointupdate_s2025"
+    }
+  ],
+  "summary": {
+    "J0": {
+      "rec_hit10": {
+        "mean": 0.05226666666666666,
+        "std": 0.00011547005383792445
+      },
+      "rec_ndcg10": {
+        "mean": 0.029623935870891974,
+        "std": 0.0002559727699137328
+      },
+      "search_hit10": {
+        "mean": 0.0772,
+        "std": 0.0
+      },
+      "search_ndcg10": {
+        "mean": 0.04047998968076436,
+        "std": 0.00016383321975527716
+      }
+    },
+    "JB": {
+      "rec_hit10": {
+        "mean": 0.05226666666666666,
+        "std": 0.0005033222956847168
+      },
+      "rec_ndcg10": {
+        "mean": 0.032156230739521466,
+        "std": 0.0002989890271394133
+      },
+      "search_hit10": {
+        "mean": 0.07693333333333334,
+        "std": 0.00011547005383792846
+      },
+      "search_ndcg10": {
+        "mean": 0.040865922266312533,
+        "std": 0.00010964695827146745
+      }
+    }
+  },
+  "paired_differences": [
+    {
+      "comparison": "JB_minus_J0",
+      "metric": "rec_hit10",
+      "mean_difference": -2.3129646346357427e-18,
+      "positive_seeds": 1,
+      "zero_seeds": 1,
+      "negative_seeds": 1,
+      "seed_42": 0.0003999999999999976,
+      "seed_2024": 0.0,
+      "seed_2025": -0.0004000000000000045
+    },
+    {
+      "comparison": "JB_minus_J0",
+      "metric": "rec_ndcg10",
+      "mean_difference": 0.002532294868629492,
+      "positive_seeds": 3,
+      "zero_seeds": 0,
+      "negative_seeds": 0,
+      "seed_42": 0.00257391790362348,
+      "seed_2024": 0.0025650127215969543,
+      "seed_2025": 0.002457953980668042
+    },
+    {
+      "comparison": "JB_minus_J0",
+      "metric": "search_hit10",
+      "mean_difference": -0.0002666666666666743,
+      "positive_seeds": 0,
+      "zero_seeds": 0,
+      "negative_seeds": 3,
+      "seed_42": -0.00020000000000000573,
+      "seed_2024": -0.00020000000000000573,
+      "seed_2025": -0.00040000000000001146
+    },
+    {
+      "comparison": "JB_minus_J0",
+      "metric": "search_ndcg10",
+      "mean_difference": 0.00038593258554816406,
+      "positive_seeds": 3,
+      "zero_seeds": 0,
+      "negative_seeds": 0,
+      "seed_42": 0.00035853984760082086,
+      "seed_2024": 0.0005327752572984179,
+      "seed_2025": 0.00026648265174525343
+    }
+  ]
+}

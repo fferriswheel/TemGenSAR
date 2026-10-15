@@ -1,0 +1,19 @@
+{
+  "verified_on": "2026-10-15",
+  "restore_order": [
+    "cjk_server_backup_20260907.tar.zst",
+    "cjk_incremental_20260908_postwork.tar.zst"
+  ],
+  "archives": [
+    {
+      "file": "cjk_server_backup_20260907.tar.zst",
+      "size_bytes": 80053883835,
+      "sha256": "7f28b70ab902169a04bf46e698af8b307056ebd05e099102f7abf52c7ee2ffae"
+    },
+    {
+      "file": "cjk_incremental_20260908_postwork.tar.zst",
+      "size_bytes": 6470837035,
+      "sha256": "6b620e62df05ebf5bb26bf489998271b0bf665716d878db043560e26835cb1b3"
+    }
+  ]
+}

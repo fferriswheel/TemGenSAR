@@ -1,0 +1,500 @@
+{
+  "runs": [
+    {
+      "method": "GenSARFixed",
+      "seed": 2026,
+      "val_rec_ndcg5": 0.0706337847711158,
+      "val_search_ndcg5": 0.1181795610485792,
+      "val_mean_ndcg5": 0.0944066729098475,
+      "rec_hit10": 0.22069417157825802,
+      "rec_ndcg10": 0.10503742018678885,
+      "search_hit10": 0.296995108315863,
+      "search_ndcg10": 0.15401631214225658,
+      "run_dir": "stage3/runs/kuaisar_temporal/formal_w4_gensar_faithful_fixed_s2026"
+    },
+    {
+      "method": "GenSARFullRefresh",
+      "seed": 2026,
+      "val_rec_ndcg5": 0.012428711205393171,
+      "val_search_ndcg5": 0.030550218624466618,
+      "val_mean_ndcg5": 0.021489464914929896,
+      "rec_hit10": 0.08055009823182711,
+      "rec_ndcg10": 0.0313101536197324,
+      "search_hit10": 0.10062893081761007,
+      "search_ndcg10": 0.04662424196950035,
+      "run_dir": "stage3/runs/kuaisar_temporal/formal_w4_gensar_faithful_refresh_s2026"
+    },
+    {
+      "method": "V13DetectorK150",
+      "seed": 2026,
+      "val_rec_ndcg5": 0.08338164615292959,
+      "val_search_ndcg5": 0.08565625090161273,
+      "val_mean_ndcg5": 0.08451894852727115,
+      "rec_hit10": 0.21676489849377864,
+      "rec_ndcg10": 0.11105003699536584,
+      "search_hit10": 0.23410202655485673,
+      "search_ndcg10": 0.11643432233286209,
+      "run_dir": "stage3/runs/kuaisar_temporal/formal_w4_v13b_detector_k150_s2026"
+    },
+    {
+      "method": "V13DetectorK300",
+      "seed": 2026,
+      "val_rec_ndcg5": 0.08046475135212917,
+      "val_search_ndcg5": 0.08567444879821151,
+      "val_mean_ndcg5": 0.08306960007517034,
+      "rec_hit10": 0.2177472167648985,
+      "rec_ndcg10": 0.10935259915562967,
+      "search_hit10": 0.2348008385744235,
+      "search_ndcg10": 0.11647092279884738,
+      "run_dir": "stage3/runs/kuaisar_temporal/formal_w4_v13b_detector_k300_s2026"
+    },
+    {
+      "method": "V13DetectorK75",
+      "seed": 2026,
+      "val_rec_ndcg5": 0.08300105050836325,
+      "val_search_ndcg5": 0.08620269691397886,
+      "val_mean_ndcg5": 0.08460187371117106,
+      "rec_hit10": 0.21872953503601833,
+      "rec_ndcg10": 0.11126522822136456,
+      "search_hit10": 0.24039133473095736,
+      "search_ndcg10": 0.118786254289845,
+      "run_dir": "stage3/runs/kuaisar_temporal/formal_w4_v13b_detector_k75_s2026"
+    },
+    {
+      "method": "V13Fixed",
+      "seed": 2026,
+      "val_rec_ndcg5": 0.08429781934459085,
+      "val_search_ndcg5": 0.0855402806876097,
+      "val_mean_ndcg5": 0.08491905001610028,
+      "rec_hit10": 0.21872953503601833,
+      "rec_ndcg10": 0.11242791218277279,
+      "search_hit10": 0.23619846261355695,
+      "search_ndcg10": 0.1185037277238344,
+      "run_dir": "stage3/runs/kuaisar_temporal/formal_w4_v13b_fixed_s2026"
+    },
+    {
+      "method": "V13MatchedRandomK75",
+      "seed": 2026,
+      "val_rec_ndcg5": 0.08379848791297895,
+      "val_search_ndcg5": 0.08622504327562294,
+      "val_mean_ndcg5": 0.08501176559430094,
+      "rec_hit10": 0.2177472167648985,
+      "rec_ndcg10": 0.11160717808324117,
+      "search_hit10": 0.23969252271139063,
+      "search_ndcg10": 0.11862258320037575,
+      "run_dir": "stage3/runs/kuaisar_temporal/formal_w4_v13b_matched_random_k75_s2026"
+    },
+    {
+      "method": "V13SupportK75",
+      "seed": 2026,
+      "val_rec_ndcg5": 0.07897439765010476,
+      "val_search_ndcg5": 0.08474045082199154,
+      "val_mean_ndcg5": 0.08185742423604815,
+      "rec_hit10": 0.21709233791748528,
+      "rec_ndcg10": 0.10897179853754246,
+      "search_hit10": 0.23200559049615654,
+      "search_ndcg10": 0.11576441723696398,
+      "run_dir": "stage3/runs/kuaisar_temporal/formal_w4_v13b_support_k75_s2026"
+    }
+  ],
+  "summary": {
+    "GenSARFixed": {
+      "rec_hit10": {
+        "mean": 0.22069417157825802,
+        "std": NaN
+      },
+      "rec_ndcg10": {
+        "mean": 0.10503742018678885,
+        "std": NaN
+      },
+      "search_hit10": {
+        "mean": 0.296995108315863,
+        "std": NaN
+      },
+      "search_ndcg10": {
+        "mean": 0.15401631214225658,
+        "std": NaN
+      }
+    },
+    "GenSARFullRefresh": {
+      "rec_hit10": {
+        "mean": 0.08055009823182711,
+        "std": NaN
+      },
+      "rec_ndcg10": {
+        "mean": 0.0313101536197324,
+        "std": NaN
+      },
+      "search_hit10": {
+        "mean": 0.10062893081761007,
+        "std": NaN
+      },
+      "search_ndcg10": {
+        "mean": 0.04662424196950035,
+        "std": NaN
+      }
+    },
+    "V13DetectorK150": {
+      "rec_hit10": {
+        "mean": 0.21676489849377864,
+        "std": NaN
+      },
+      "rec_ndcg10": {
+        "mean": 0.11105003699536584,
+        "std": NaN
+      },
+      "search_hit10": {
+        "mean": 0.23410202655485673,
+        "std": NaN
+      },
+      "search_ndcg10": {
+        "mean": 0.11643432233286209,
+        "std": NaN
+      }
+    },
+    "V13DetectorK300": {
+      "rec_hit10": {
+        "mean": 0.2177472167648985,
+        "std": NaN
+      },
+      "rec_ndcg10": {
+        "mean": 0.10935259915562967,
+        "std": NaN
+      },
+      "search_hit10": {
+        "mean": 0.2348008385744235,
+        "std": NaN
+      },
+      "search_ndcg10": {
+        "mean": 0.11647092279884738,
+        "std": NaN
+      }
+    },
+    "V13DetectorK75": {
+      "rec_hit10": {
+        "mean": 0.21872953503601833,
+        "std": NaN
+      },
+      "rec_ndcg10": {
+        "mean": 0.11126522822136456,
+        "std": NaN
+      },
+      "search_hit10": {
+        "mean": 0.24039133473095736,
+        "std": NaN
+      },
+      "search_ndcg10": {
+        "mean": 0.118786254289845,
+        "std": NaN
+      }
+    },
+    "V13Fixed": {
+      "rec_hit10": {
+        "mean": 0.21872953503601833,
+        "std": NaN
+      },
+      "rec_ndcg10": {
+        "mean": 0.11242791218277279,
+        "std": NaN
+      },
+      "search_hit10": {
+        "mean": 0.23619846261355695,
+        "std": NaN
+      },
+      "search_ndcg10": {
+        "mean": 0.1185037277238344,
+        "std": NaN
+      }
+    },
+    "V13MatchedRandomK75": {
+      "rec_hit10": {
+        "mean": 0.2177472167648985,
+        "std": NaN
+      },
+      "rec_ndcg10": {
+        "mean": 0.11160717808324117,
+        "std": NaN
+      },
+      "search_hit10": {
+        "mean": 0.23969252271139063,
+        "std": NaN
+      },
+      "search_ndcg10": {
+        "mean": 0.11862258320037575,
+        "std": NaN
+      }
+    },
+    "V13SupportK75": {
+      "rec_hit10": {
+        "mean": 0.21709233791748528,
+        "std": NaN
+      },
+      "rec_ndcg10": {
+        "mean": 0.10897179853754246,
+        "std": NaN
+      },
+      "search_hit10": {
+        "mean": 0.23200559049615654,
+        "std": NaN
+      },
+      "search_ndcg10": {
+        "mean": 0.11576441723696398,
+        "std": NaN
+      }
+    }
+  },
+  "paired_differences": [
+    {
+      "comparison": "V13Fixed_minus_GenSARFixed",
+      "metric": "rec_hit10",
+      "mean_difference": -0.0019646365422396894,
+      "positive_seeds": 0,
+      "zero_seeds": 0,
+      "negative_seeds": 1,
+      "seed_2026": -0.0019646365422396894
+    },
+    {
+      "comparison": "V13Fixed_minus_GenSARFixed",
+      "metric": "rec_ndcg10",
+      "mean_difference": 0.007390491995983933,
+      "positive_seeds": 1,
+      "zero_seeds": 0,
+      "negative_seeds": 0,
+      "seed_2026": 0.007390491995983933
+    },
+    {
+      "comparison": "V13Fixed_minus_GenSARFixed",
+      "metric": "search_hit10",
+      "mean_difference": -0.06079664570230606,
+      "positive_seeds": 0,
+      "zero_seeds": 0,
+      "negative_seeds": 1,
+      "seed_2026": -0.06079664570230606
+    },
+    {
+      "comparison": "V13Fixed_minus_GenSARFixed",
+      "metric": "search_ndcg10",
+      "mean_difference": -0.035512584418422186,
+      "positive_seeds": 0,
+      "zero_seeds": 0,
+      "negative_seeds": 1,
+      "seed_2026": -0.035512584418422186
+    },
+    {
+      "comparison": "V13Fixed_minus_GenSARFullRefresh",
+      "metric": "rec_hit10",
+      "mean_difference": 0.1381794368041912,
+      "positive_seeds": 1,
+      "zero_seeds": 0,
+      "negative_seeds": 0,
+      "seed_2026": 0.1381794368041912
+    },
+    {
+      "comparison": "V13Fixed_minus_GenSARFullRefresh",
+      "metric": "rec_ndcg10",
+      "mean_difference": 0.08111775856304039,
+      "positive_seeds": 1,
+      "zero_seeds": 0,
+      "negative_seeds": 0,
+      "seed_2026": 0.08111775856304039
+    },
+    {
+      "comparison": "V13Fixed_minus_GenSARFullRefresh",
+      "metric": "search_hit10",
+      "mean_difference": 0.13556953179594688,
+      "positive_seeds": 1,
+      "zero_seeds": 0,
+      "negative_seeds": 0,
+      "seed_2026": 0.13556953179594688
+    },
+    {
+      "comparison": "V13Fixed_minus_GenSARFullRefresh",
+      "metric": "search_ndcg10",
+      "mean_difference": 0.07187948575433405,
+      "positive_seeds": 1,
+      "zero_seeds": 0,
+      "negative_seeds": 0,
+      "seed_2026": 0.07187948575433405
+    },
+    {
+      "comparison": "V13Fixed_minus_V13DetectorK150",
+      "metric": "rec_hit10",
+      "mean_difference": 0.0019646365422396894,
+      "positive_seeds": 1,
+      "zero_seeds": 0,
+      "negative_seeds": 0,
+      "seed_2026": 0.0019646365422396894
+    },
+    {
+      "comparison": "V13Fixed_minus_V13DetectorK150",
+      "metric": "rec_ndcg10",
+      "mean_difference": 0.0013778751874069517,
+      "positive_seeds": 1,
+      "zero_seeds": 0,
+      "negative_seeds": 0,
+      "seed_2026": 0.0013778751874069517
+    },
+    {
+      "comparison": "V13Fixed_minus_V13DetectorK150",
+      "metric": "search_hit10",
+      "mean_difference": 0.0020964360587002184,
+      "positive_seeds": 1,
+      "zero_seeds": 0,
+      "negative_seeds": 0,
+      "seed_2026": 0.0020964360587002184
+    },
+    {
+      "comparison": "V13Fixed_minus_V13DetectorK150",
+      "metric": "search_ndcg10",
+      "mean_difference": 0.0020694053909723065,
+      "positive_seeds": 1,
+      "zero_seeds": 0,
+      "negative_seeds": 0,
+      "seed_2026": 0.0020694053909723065
+    },
+    {
+      "comparison": "V13Fixed_minus_V13DetectorK300",
+      "metric": "rec_hit10",
+      "mean_difference": 0.0009823182711198308,
+      "positive_seeds": 1,
+      "zero_seeds": 0,
+      "negative_seeds": 0,
+      "seed_2026": 0.0009823182711198308
+    },
+    {
+      "comparison": "V13Fixed_minus_V13DetectorK300",
+      "metric": "rec_ndcg10",
+      "mean_difference": 0.0030753130271431173,
+      "positive_seeds": 1,
+      "zero_seeds": 0,
+      "negative_seeds": 0,
+      "seed_2026": 0.0030753130271431173
+    },
+    {
+      "comparison": "V13Fixed_minus_V13DetectorK300",
+      "metric": "search_hit10",
+      "mean_difference": 0.0013976240391334604,
+      "positive_seeds": 1,
+      "zero_seeds": 0,
+      "negative_seeds": 0,
+      "seed_2026": 0.0013976240391334604
+    },
+    {
+      "comparison": "V13Fixed_minus_V13DetectorK300",
+      "metric": "search_ndcg10",
+      "mean_difference": 0.0020328049249870167,
+      "positive_seeds": 1,
+      "zero_seeds": 0,
+      "negative_seeds": 0,
+      "seed_2026": 0.0020328049249870167
+    },
+    {
+      "comparison": "V13Fixed_minus_V13DetectorK75",
+      "metric": "rec_hit10",
+      "mean_difference": 0.0,
+      "positive_seeds": 0,
+      "zero_seeds": 1,
+      "negative_seeds": 0,
+      "seed_2026": 0.0
+    },
+    {
+      "comparison": "V13Fixed_minus_V13DetectorK75",
+      "metric": "rec_ndcg10",
+      "mean_difference": 0.0011626839614082285,
+      "positive_seeds": 1,
+      "zero_seeds": 0,
+      "negative_seeds": 0,
+      "seed_2026": 0.0011626839614082285
+    },
+    {
+      "comparison": "V13Fixed_minus_V13DetectorK75",
+      "metric": "search_hit10",
+      "mean_difference": -0.004192872117400409,
+      "positive_seeds": 0,
+      "zero_seeds": 0,
+      "negative_seeds": 1,
+      "seed_2026": -0.004192872117400409
+    },
+    {
+      "comparison": "V13Fixed_minus_V13DetectorK75",
+      "metric": "search_ndcg10",
+      "mean_difference": -0.00028252656601060466,
+      "positive_seeds": 0,
+      "zero_seeds": 0,
+      "negative_seeds": 1,
+      "seed_2026": -0.00028252656601060466
+    },
+    {
+      "comparison": "V13Fixed_minus_V13MatchedRandomK75",
+      "metric": "rec_hit10",
+      "mean_difference": 0.0009823182711198308,
+      "positive_seeds": 1,
+      "zero_seeds": 0,
+      "negative_seeds": 0,
+      "seed_2026": 0.0009823182711198308
+    },
+    {
+      "comparison": "V13Fixed_minus_V13MatchedRandomK75",
+      "metric": "rec_ndcg10",
+      "mean_difference": 0.0008207340995316226,
+      "positive_seeds": 1,
+      "zero_seeds": 0,
+      "negative_seeds": 0,
+      "seed_2026": 0.0008207340995316226
+    },
+    {
+      "comparison": "V13Fixed_minus_V13MatchedRandomK75",
+      "metric": "search_hit10",
+      "mean_difference": -0.003494060097833679,
+      "positive_seeds": 0,
+      "zero_seeds": 0,
+      "negative_seeds": 1,
+      "seed_2026": -0.003494060097833679
+    },
+    {
+      "comparison": "V13Fixed_minus_V13MatchedRandomK75",
+      "metric": "search_ndcg10",
+      "mean_difference": -0.00011885547654134909,
+      "positive_seeds": 0,
+      "zero_seeds": 0,
+      "negative_seeds": 1,
+      "seed_2026": -0.00011885547654134909
+    },
+    {
+      "comparison": "V13Fixed_minus_V13SupportK75",
+      "metric": "rec_hit10",
+      "mean_difference": 0.0016371971185330514,
+      "positive_seeds": 1,
+      "zero_seeds": 0,
+      "negative_seeds": 0,
+      "seed_2026": 0.0016371971185330514
+    },
+    {
+      "comparison": "V13Fixed_minus_V13SupportK75",
+      "metric": "rec_ndcg10",
+      "mean_difference": 0.0034561136452303243,
+      "positive_seeds": 1,
+      "zero_seeds": 0,
+      "negative_seeds": 0,
+      "seed_2026": 0.0034561136452303243
+    },
+    {
+      "comparison": "V13Fixed_minus_V13SupportK75",
+      "metric": "search_hit10",
+      "mean_difference": 0.004192872117400409,
+      "positive_seeds": 1,
+      "zero_seeds": 0,
+      "negative_seeds": 0,
+      "seed_2026": 0.004192872117400409
+    },
+    {
+      "comparison": "V13Fixed_minus_V13SupportK75",
+      "metric": "search_ndcg10",
+      "mean_difference": 0.002739310486870414,
+      "positive_seeds": 1,
+      "zero_seeds": 0,
+      "negative_seeds": 0,
+      "seed_2026": 0.002739310486870414
+    }
+  ]
+}

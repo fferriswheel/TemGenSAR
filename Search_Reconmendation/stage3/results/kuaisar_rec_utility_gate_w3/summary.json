@@ -1,0 +1,21 @@
+{
+  "candidate_changes": 60,
+  "gate_rows": 3453,
+  "covered_candidates": 39,
+  "variants": {
+    "support1": {
+      "min_support": 1,
+      "min_delta": 0.0,
+      "selected_items": 4,
+      "selected_gate_rows": 20,
+      "mean_item_delta_ndcg10": 0.09612637037803272
+    },
+    "support3": {
+      "min_support": 3,
+      "min_delta": 0.0,
+      "selected_items": 2,
+      "selected_gate_rows": 16,
+      "mean_item_delta_ndcg10": 0.06779033682201827
+    }
+  }
+}

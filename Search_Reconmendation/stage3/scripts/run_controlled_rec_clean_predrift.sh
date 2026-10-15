@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT=/data/cjk/Search_Reconmendation
+GENSAR_DATA=/data/cjk/external/GenSAR/data
+QUARTERLY=stage3/data/gensar_faithful_20k_quarterly_controlled_rec_w3w6w9_v1
+ITEM_IDS=stage3/data/gensar_faithful_20k_t0_2011q4/item_ids.jsonl
+MAPPING=stage3/data/temporal_joint_r2a_mappings/J0_fixed_sid_mapping.json
+EXPORT=stage3/data/temporal_joint_r2a_mappings/export
+RUNS=$ROOT/stage3/runs/temporal_incremental
+T0=$ROOT/stage3/runs/temporal_t0/v13b_w1_noupdate_seed2024
+cd "$ROOT"
+
+is_complete() {
+  local output=$1
+  [[ -f "$output/model.safetensors" \
+    && -f "$output/SeqRecWithSrcHis_sample_neg-999_beam-10.json" \
+    && -f "$output/PerSrcWithRecHis_sample_neg-999_beam-10.json" ]]
+}
+
+prepare_window() {
+  local window=$1 eval=$2 dataset=$3
+  python stage3/scripts/materialize_temporal_incremental_gensar.py \
+    --quarterly-dir "$QUARTERLY" \
+    --update-window "$window" --eval-window "$eval" \
+    --output-dir "$GENSAR_DATA/$dataset" \
+    --semantic-sid "$EXPORT/J0_fixed_semantic.json" \
+    --collaborate-sid "$EXPORT/J0_fixed_collaborate.json" \
+    --base-mapping "$MAPPING" --current-mapping "$MAPPING" \
+    --item-ids "$ITEM_IDS" --update-task both --all-items-for-alignment \
+    --seed 2024 \
+    >"stage3/runs/${dataset}.materialize.log"
+}
+
+run_window() {
+  local gpu=$1 window=$2 eval=$3 initial=$4
+  local experiment="CRD_Clean_${window}_Fixed_s2024"
+  local dataset="GenSAR_Faithful_20K_CRD_Clean_${window}"
+  local output="$RUNS/$experiment"
+  if is_complete "$output"; then
+    echo "[skip] $experiment"
+    return
+  fi
+  prepare_window "$window" "$eval" "$dataset"
+  bash stage3/scripts/run_temporal_incremental_t5.sh "$gpu" \
+    "$experiment" "$dataset" J0_fixed_semantic.json J0_fixed_collaborate.json \
+    1800 2024 "$initial"
+  find "$output" -depth \
+    \( -path "$output/checkpoint-*" -o -path "$output/checkpoint-*/*" \) -delete
+}
+
+run_window 4 W1 W2 "$T0"
+run_window 4 W2 W3 "$RUNS/CRD_Clean_W1_Fixed_s2024"
+

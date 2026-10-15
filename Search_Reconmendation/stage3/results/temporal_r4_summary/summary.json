@@ -1,0 +1,51 @@
+{
+  "windows": [
+    3,
+    5,
+    9
+  ],
+  "validation_margin": 0.0002,
+  "note": "The gate is a retrospective diagnostic and must be validated on new windows/seeds.",
+  "method_test_mean_ndcg10": {
+    "R3": 0.027032601583980142,
+    "R4B-B1": 0.027319236536579212,
+    "R4B-B2": 0.027281414733112824,
+    "R4C-C0": 0.0273314456190312,
+    "R4C-C01": 0.027366781729766792
+  },
+  "gate": {
+    "accepted_windows": [
+      "W3"
+    ],
+    "mean_realized_test_delta": 0.00028713203925435454,
+    "rows": [
+      {
+        "update_window": "W3",
+        "eval_window": "W4",
+        "accepted_r4c_c0": true,
+        "validation_delta": 0.0006186452003487733,
+        "base_test_mean_ndcg10": 0.02839598700116345,
+        "chosen_test_mean_ndcg10": 0.029257383118926512,
+        "realized_test_delta": 0.0008613961177630636
+      },
+      {
+        "update_window": "W5",
+        "eval_window": "W6",
+        "accepted_r4c_c0": false,
+        "validation_delta": 0.00010652778590685905,
+        "base_test_mean_ndcg10": 0.026548407374604722,
+        "chosen_test_mean_ndcg10": 0.026548407374604722,
+        "realized_test_delta": 0.0
+      },
+      {
+        "update_window": "W9",
+        "eval_window": "W10",
+        "accepted_r4c_c0": false,
+        "validation_delta": 9.963093001482196e-05,
+        "base_test_mean_ndcg10": 0.026153410376172255,
+        "chosen_test_mean_ndcg10": 0.026153410376172255,
+        "realized_test_delta": 0.0
+      }
+    ]
+  }
+}

@@ -1,0 +1,6 @@
+,rec_hit10,rec_hit10,rec_ndcg10,rec_ndcg10,search_hit10,search_hit10,search_ndcg10,search_ndcg10
+,mean,std,mean,std,mean,std,mean,std
+method,,,,,,,,
+Fixed,0.0324,,0.0203031485930033,,0.0434,,0.02369549184874743,
+Random,0.0324,,0.02030861710102147,,0.044,,0.02369161626410323,
+Selective,0.0332,,0.0209807741931328,,0.0432,,0.023158978206678296,

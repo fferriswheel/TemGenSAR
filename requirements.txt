@@ -1,0 +1,16 @@
+# Direct dependencies found in the 2026-09-07 server export.
+# Python 3.12; install the appropriate PyTorch CUDA build separately if needed.
+accelerate==1.13.0
+duckdb==1.5.3
+einops==0.8.0
+numpy==1.26.4
+pandas==2.2.3
+peft==0.14.0
+pyarrow==15.0.1
+safetensors==0.5.3
+scikit-learn==1.7.1
+scipy==1.12.0
+sentencepiece==0.2.1
+torch==2.6.0
+tqdm==4.67.1
+transformers==5.9.0

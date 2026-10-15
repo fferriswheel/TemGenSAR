@@ -1,0 +1,42 @@
+{
+  "source_files": 354,
+  "source_bytes": 2604527,
+  "asset_entries": 10760,
+  "model_or_tensor_entries": 735,
+  "asset_categories": {
+    "dataset": {
+      "files": 3779,
+      "size_bytes": 31114769254
+    },
+    "other": {
+      "files": 25,
+      "size_bytes": 17004169
+    },
+    "tensor_or_checkpoint": {
+      "files": 393,
+      "size_bytes": 4307471548
+    },
+    "generated_artifact": {
+      "files": 333,
+      "size_bytes": 946185300
+    },
+    "embedding_or_array": {
+      "files": 87,
+      "size_bytes": 1454517518
+    },
+    "run_metadata": {
+      "files": 4016,
+      "size_bytes": 1233279418
+    },
+    "result": {
+      "files": 223,
+      "size_bytes": 212328562
+    },
+    "model_weights": {
+      "files": 330,
+      "size_bytes": 77419326544
+    }
+  },
+  "source_snapshot_date": "2026-09-08",
+  "prepared_on": "2026-10-15"
+}

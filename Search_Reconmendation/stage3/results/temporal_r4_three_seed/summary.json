@@ -1,0 +1,20 @@
+{
+  "protocol": "incremental-training seeds; shared 2024 upstream trajectory",
+  "seeds": [
+    42,
+    2024,
+    2025
+  ],
+  "windows": [
+    3,
+    5,
+    9
+  ],
+  "gate_margin": 0.0002,
+  "gate_accepts": 5,
+  "gate_total": 9,
+  "gate_mean_test_delta_vs_selective": 0.00030000536974582093,
+  "gate_mean_test_delta_vs_fixed": 0.0005001723203775413,
+  "gate_rec_test_delta_vs_fixed": -0.0004503848520584393,
+  "gate_mean_test_delta_vs_random": 0.000726314724088265
+}
