@@ -1,5 +1,7 @@
 # 模型发布
 
+本页介绍可下载的模型快照（checkpoint，即保存的权重与配置）。这些模型用于预测 item 的语义编码 SID；有效检索还需要配套映射，把生成的编码对应回商品或电影。
+
 ## Hugging Face 版本
 
 MovieLens-25M 模型与配套 SID 已发布至 [Ferriswheel1412/TemGenSAR-MovieLens25M](https://huggingface.co/Ferriswheel1412/TemGenSAR-MovieLens25M)。仓库已于 **2026-10-17 公开**，模型与配套 SID 可无需登录下载。
@@ -15,18 +17,20 @@ MovieLens-25M 模型与配套 SID 已发布至 [Ferriswheel1412/TemGenSAR-MovieL
 
 公开版本只更新了模型卡与对应校验清单；全部 checkpoint、SID 与评估文件保持不变。原权重版本为 `947652476014c1a04ba6b3d59e27896b7adc804d`，当前下载固定到表中的公开文档版本。
 
-## Checkpoint 目录
+## 模型目录与方法含义
+
+当前比较固定编码、冻结推荐码本更新、刷新推荐码本后对齐三种方案。码本是将连续表示转成离散 token 的向量集合；TASR 是历史系列代号，原记录未定义英文全称，A/B 区分后两种更新方案。t0 表示更新前共同训练好的初始模型。
 
 | Hugging Face 路径 | 角色 | 对应 SID |
 | --- | --- | --- |
-| `models/t0-p1-v13b/` | 共同初始化与 teacher，t0 seed 2026 | `sid/base/` |
+| `models/t0-p1-v13b/` | 共同初始模型与蒸馏教师；初始训练随机种子 2026 | `sid/base/` |
 | `models/frozen/seed-{42,2024,2025}/` | 固定 SID + 等预算下游更新对照 | `sid/base/` |
-| `models/tasr-a/seed-{42,2024,2025}/` | 冻结 codebook 的选择性更新 | `sid/tasr-a/` 与 `sid/base/` |
-| `models/tasr-b/seed-{42,2024,2025}/` | Refresh / align / selective materialization | `sid/tasr-b/` 与 `sid/base/` |
+| `models/tasr-a/seed-{42,2024,2025}/` | 冻结推荐码本与表示解码器，只更新推荐 adapter（小型任务表示网络） | `sid/tasr-a/` 与 `sid/base/` |
+| `models/tasr-b/seed-{42,2024,2025}/` | 更新推荐 adapter、码本与表示解码器，对齐新旧 token 后只发布局部换码 | `sid/tasr-b/` 与 `sid/base/` |
 
-TASR-B 为当前主候选，A 为较少 SID 可训练参数的对照。B 相对 Frozen 的全体 Rec nDCG@10 约 +0.12%，与 A 的差异不显著；不能据此宣称 B 有大幅整体优势。详细指标、子集收益和统计范围见[实验结果](experiments.md)。
+刷新码本后对齐（B）为当前主候选，冻结码本（A）所需的 SID 可训练参数较少。B 相对固定编码组的全体推荐 nDCG@10（考虑前十位置的排序指标）约 +0.12%，与 A 的差异不显著。两者核心区别是推荐码本与表示解码器是否允许更新，并非下游是否训练；两组均继续全参数训练 T5。详细指标、子集收益和统计范围见[实验结果](experiments.md)。
 
-模型按验证集选择 checkpoint。示例使用 B seed 42，其在 B 的三个 seed 中具有最高 joint validation nDCG@5，未按 W2 测试指标挑选。全部正式 seed 均保留，报告方法性能时使用三 seed 汇总。开发 pilot seed 2026 未混入正式时序均值；t0 seed 2026 是共同初始化。
+每次训练按验证集选保存的模型。示例使用 B 的随机种子 42，它在 B 的三次训练中具有最高搜索/推荐联合验证 nDCG@5，未按未来测试结果挑选。42、2024、2025 三个正式随机种子均保留并用于均值汇总。种子 2026 的时序训练仅用于开发试验；初始模型也用 2026 训练，这是另一角色，不混入正式时序均值。
 
 ## 下载示例
 
@@ -79,7 +83,7 @@ tokenizer = AutoTokenizer.from_pretrained(
 
 模型用于 SID 生成式搜推研究。有效检索还需要对应任务提示、用户上下文、item/SID 映射与约束解码，单独加载权重不能复现排名结果。接口与原始运行入口见[方法](method.md)和[代码导航](research-status.md)。
 
-模型包包含 tokenizer / config、SID checkpoint 与部署映射、GenSAR index、item-only catalog、汇总评估和校验记录。原始交互、用户映射、完整训练输入、逐样本预测及训练日志不包含在模型包内。
+模型包包含文本分词器与配置、SID 模型、最终 item→SID 部署映射、GenSAR 使用的编码索引、只含 item 的目录，以及汇总评估和校验记录。原始交互、用户映射、完整训练输入、逐样本预测及训练日志不包含在模型包内。
 
 ## 产物验证与复现边界
 
@@ -92,6 +96,6 @@ tokenizer = AutoTokenizer.from_pretrained(
 
 ## 其他实验模型
 
-当前 HF 包只覆盖上述 MovieLens 系列。Amazon 静态 / R1S / Controlled Rec Drift、KuaiSAR 及 P1-R / P1-RN 等历史模型尚未包含在该发布中；相应代码与汇总证据仍保留于 GitHub。**约 +26.46% 的 Search 换码子集结果来自 Amazon R1S，使用另一组历史 checkpoint。**
+当前 HF 包只覆盖上述 MovieLens 系列。Amazon 静态编码、受控搜索/推荐漂移、KuaiSAR，以及增加残差重构或序列邻域的结构变体等历史模型尚未包含在该发布中；相应代码与汇总证据仍保留于 GitHub。**约 +26.46% 的 Search 换码子集结果来自 Amazon R1S，使用另一组历史 checkpoint。**
 
-其他历史资产的来源索引见[资产访问](storage.md)。阶段17–19分别记录 [P2 对照](../Search_Reconmendation/files/PhaseSummary/阶段17_MovieLens25M_P2共识前缀实验_2026-09-07.md)、[P1-R / RN 对照](../Search_Reconmendation/files/PhaseSummary/阶段18_P1条件残差与Rec信息增强对比_2026-09-08.md)与[最新时序实验](../Search_Reconmendation/files/PhaseSummary/阶段19_TASR两种时序更新实验_2026-09-08.md)。
+其他历史资产的来源索引见[资产访问](storage.md)。阶段17–19分别记录 [共识前缀对照（P2）](../Search_Reconmendation/files/PhaseSummary/阶段17_MovieLens25M_P2共识前缀实验_2026-09-07.md)、[残差重构与序列邻域对照（P1-R / RN）](../Search_Reconmendation/files/PhaseSummary/阶段18_P1条件残差与Rec信息增强对比_2026-09-08.md)与[最新时序实验](../Search_Reconmendation/files/PhaseSummary/阶段19_TASR两种时序更新实验_2026-09-08.md)。

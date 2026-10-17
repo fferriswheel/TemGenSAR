@@ -1,5 +1,7 @@
 # 模型、数据与资产访问
 
+这里区分三类对象：源码与结果说明、已训练模型，以及训练/评估所需数据。SID 是 item 的语义编码；部署映射记录每个 item 最终使用哪个 SID。
+
 ## 分发范围
 
 | 内容 | 位置与可用性 |
@@ -9,15 +11,15 @@
 | 原始交互、用户映射、预处理数据与 embedding | 未随代码或 HF 模型包分发；复现实验需准备对应数据 |
 | 其他历史模型、逐样本预测与完整运行日志 | 历史归档，未作为公开下载资源发布 |
 
-HF 固定 revision、模型目录、配套映射及下载方式见[模型发布](model-selection.md)。固定 query/tag bank 的 Search 控制任务与真实 Search 日志应按具体 benchmark 区分，不能相互替代。
+Hugging Face 固定版本（revision，即不可变提交编号）、模型目录、配套映射及下载方式见[模型发布](model-selection.md)。MovieLens 用固定查询/标签库构造搜索控制任务；它用于检查推荐更新是否影响搜索，不是真实搜索行为随时间变化的日志。
 
 ## 数据与运行依赖
 
-| Benchmark | 所需资产 | 构建 / 协议入口 |
+| 数据集 | 所需资产 | 构建 / 协议入口 |
 | --- | --- | --- |
-| Amazon Electronics | Product Search 数据、原始 5-core reviews / metadata、chronological sequences、BGE / 行为表示与 SID | [第三方数据来源](third-party.md)、[历史原型说明](../Search_Reconmendation/stage3/README.md)、[严格静态与时序协议](experiments.md) |
-| MovieLens-25M | 原始数据、时间窗口、固定 item catalog、Search query/tag bank、表示与 SID | [benchmark builder](../Search_Reconmendation/stage3/scripts/build_movielens25m_temporal_benchmark.py)、[GenSAR export](../Search_Reconmendation/stage3/scripts/build_movielens25m_gensar_temporal.py) |
-| KuaiSAR | 原始联合搜推日志与对应预处理输出 | [严格时序 builder](../Search_Reconmendation/stage3/scripts/build_kuaisar_strict_temporal_dataset.py)、[阶段15协议](../Search_Reconmendation/files/PhaseSummary/阶段15_KuaiSAR自然Rec漂移实验_2026-09-05.md) |
+| Amazon Electronics | 商品搜索数据、原始评论与元数据、按时间排序的用户序列，以及文本/行为向量与 SID | [第三方数据来源](third-party.md)、[历史原型说明](../Search_Reconmendation/stage3/README.md)、[严格静态与时序协议](experiments.md) |
+| MovieLens-25M | 原始数据、时间窗口、固定 item 目录、搜索查询/标签库、连续向量表示与 SID | [时间窗口构建脚本](../Search_Reconmendation/stage3/scripts/build_movielens25m_temporal_benchmark.py)、[GenSAR 格式导出](../Search_Reconmendation/stage3/scripts/build_movielens25m_gensar_temporal.py) |
+| KuaiSAR | 原始联合搜推日志与对应预处理输出 | [严格时序构建脚本](../Search_Reconmendation/stage3/scripts/build_kuaisar_strict_temporal_dataset.py)、[阶段15协议](../Search_Reconmendation/files/PhaseSummary/阶段15_KuaiSAR自然Rec漂移实验_2026-09-05.md) |
 
 原始数据需从各自发布方按相应条款获取。本仓库尚未提供覆盖全部实验的一键数据准备流程；历史路径、符号链接与模型输入版本需要按[环境说明](../environment/README.md)适配。
 
@@ -25,7 +27,7 @@ HF 固定 revision、模型目录、配套映射及下载方式见[模型发布]
 
 以下清单用于来源追踪，不表示文件已公开托管：
 
-- [model_files.tsv](../assets/model_files.tsv)：735 条模型/张量记录；其中 330 个普通 safetensors、393 个普通 pt/pth 等文件和 12 条链接。pt/pth 也可能是 embedding、codebook 或中间张量。
+- [model_files.tsv](../assets/model_files.tsv)：735 条模型/张量记录；其中 330 个普通 safetensors、393 个普通 pt/pth 等文件和 12 条链接。pt/pth 也可能是向量表示、码本或中间张量，不能仅靠扩展名判断是否为完整模型。
 - [backup_manifest.tsv](../assets/backup_manifest.tsv)：10,760 条外置文件/链接记录，包含相对路径、大小、来源与链接目标。
 - [source_snapshot.tsv](../assets/source_snapshot.tsv)：354 个初始导入文件的原始哈希；记录导入基点，后续受版本控制的修改以 Git 历史为准。
 - [archives.json](../assets/archives.json)：源归档文件名与 SHA-256。

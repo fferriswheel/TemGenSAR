@@ -1,88 +1,130 @@
 # 方法与框架
 
-本页描述截至 2026-09-08 的已实现系统。阅读顺序是：先给 item 建立编码，再检测行为变化，只更新需要变化的后缀，最后让生成模型适应新编码。实验动机与结果见[核心实验](experiments.md)，代号和术语见[名称对照](glossary.md)。
+系统分两阶段：先学习 item 编码与初始生成模型，再根据新时间窗口的行为选择性更新编码，并继续训练生成模型。这里描述截至 2026-09-08 的已实现方法；[核心实验](experiments.md)解释各项设计的证据。
 
-最新 MovieLens 对照包括两条路线：**冻结码本的局部更新（TASR-A）**与**刷新码本后对齐（TASR-B）**。码本是将连续表示量化成离散 token 的向量集合；A 只改任务 adapter，B 也允许码本与解码器变化。受控 Search 漂移和推荐专用 LoRA 属于其他实验分支。
+## 1. 一个 item 怎样变成 SID？
 
-## 1. 模块化 SID 与 t0 模型
-
-同一 item 在两个任务中共享前缀，并使用各自后缀：
+SID（Semantic ID，语义编码）是由多个离散 token 组成的 item 标识。token 可以理解为模型能够逐个输出的符号。当前同一 item 有两套编码：
 
 ```text
-Search SID(i) = [P1(i), P2(i) | S1(i), S2(i)]
-Rec SID(i)    = [P1(i), P2(i) | R1(i), R2(i)]
+搜索 SID = [P1, P2 | S1, S2]
+推荐 SID = [P1, P2 | R1, R2]
 ```
 
-每层 codebook 的典型大小为 256。前缀是量化后的共享表示；后缀保留任务信息。完整 SID、item ID 与下游 token 词表之间必须保持一致，不能仅替换模型权重而沿用不匹配的映射。
+P1、P2 表示共享前缀的两个位置；S1、S2 是搜索后缀，R1、R2 是推荐后缀。同一 item 的前缀相同，后缀可以不同。每个位置通常有 256 个可能符号，由对应的**码本**提供：码本是一组向量中心，量化器把连续表示匹配到这些中心，从而选出离散 token。
 
-主干方案在历史记录中称为 P1/v13b：融合内容（common）、行为与 Search 三种表示，先学习一个共享的连续表示（anchor），再量化为前缀。任务 adapter 是学习搜索或推荐专属表示的小模块，以共享表示为条件，再产生任务后缀。输入表示由对应数据构建器提供；MovieLens 的 Search 使用固定 query/tag bank。
+“共享”表示两个任务使用同一段编码，不代表前缀只包含内容信息；当前前缀融合了内容、推荐行为和搜索关系。
+
+## 2. 怎样学习初始编码和生成模型？
+
+### 从三种信号形成共享前缀
+
+先提取 item 的内容表示、推荐行为表示和搜索关系表示。表示是用于描述这些信息的连续向量。融合模块根据输入决定三种表示的权重，再将融合结果量化为共享前缀。这种学习加权的机制在实现中称为门控融合（gated fusion）。
+
+初始训练完成的时点记为 t0。之后的时序更新默认固定这套前缀，避免一个任务的变化直接改动两任务共用的编码。
+
+### 为两个任务学习各自的后缀
+
+搜索和推荐分别使用一个 adapter，即学习任务专属表示的小型神经网络。adapter 读取任务信息，并以共享表示为条件产生后缀表示，再经量化得到搜索或推荐 token。
+
+后缀的**解码器**是从量化表示还原原始向量的网络，用于 SID 训练；它不同于后面生成目标 SID 的 T5 解码器。
 
 ```mermaid
 flowchart TB
-    C["Common / 内容表示"] --> P["P1 多视图 gated anchor"]
-    B["t0 行为表示"] --> P
-    Q["t0 Search 表示"] --> P
-    P --> Z["共享 latent 与量化前缀 P1 P2"]
-    Z --> SA["Search adapter<br/>共享 latent 条件化"]
-    Z --> RA["Rec adapter<br/>共享 latent 条件化"]
+    C["内容表示"] --> P["学习三种信息的融合权重"]
+    B["初始推荐行为表示"] --> P
+    Q["初始搜索关系表示"] --> P
+    P --> Z["共享连续表示<br/>量化得到前缀 P1 P2"]
+    Z --> SA["搜索 adapter<br/>学习搜索专属表示"]
+    Z --> RA["推荐 adapter<br/>学习推荐专属表示"]
     C --> SA
     Q --> SA
     B --> RA
-    SA --> SQ["Search 后缀量化 S1 S2"]
-    RA --> RQ["Rec 后缀量化 R1 R2"]
-    Z --> SS["Search SID: P1 P2 S1 S2"]
+    SA --> SQ["量化搜索后缀 S1 S2"]
+    RA --> RQ["量化推荐后缀 R1 R2"]
+    Z --> SS["搜索 SID: P1 P2 S1 S2"]
     SQ --> SS
-    Z --> RS["Rec SID: P1 P2 R1 R2"]
+    Z --> RS["推荐 SID: P1 P2 R1 R2"]
     RQ --> RS
-    SS --> T["GenSAR / T5-small<br/>搜索、推荐与辅助对齐任务"]
+    SS --> T["T5-small 生成模型<br/>联合训练搜索与推荐"]
     RS --> T
-    H["任务提示、query 与行为历史"] --> T
-    T --> O["受 SID 约束的生成与 item 排序"]
+    H["任务提示、查询与行为历史"] --> T
+    T --> O["生成有效 SID<br/>映射回 item"]
 ```
 
-SID 学习包括表示重构、拓扑保持、量化 commitment，以及对应分支的 relevance / identity 等约束；并非所有实验使用相同 loss。当前主干 SID 训练与 T5 排序训练分阶段进行，尚未将序列条件排序目标端到端反传至离散 SID。
+SID 训练主要检验：量化后的表示能否还原输入信息，item 之间的邻近关系是否保留，以及连续表示与所选码本中心是否接近。代码分别称为重构、拓扑保持与 commitment 约束；搜索分支还包含查询相关性与 item 身份区分等损失，具体组合随实验不同。
 
-代码：[共享前缀训练](../Search_Reconmendation/stage3/scripts/train_multiview_anchor_prefix_v13.py)、[任务后缀 tokenizer](../Search_Reconmendation/stage3/scripts/build_neural_rq_sid_v9_direct_private.py)。共识前缀（P2）、增加残差重构（P1-R）及进一步增加序列邻域信息（P1-RN）是对照变体，未替代当前主干；[结构实验解释](experiment-details.md)。
+然后使用初始 SID 训练 T5-small。该模型采用 GenSAR 的联合搜推任务框架，根据查询、行为历史与任务提示逐步生成目标编码。当前 SID 与 T5 分阶段训练，排序目标尚未端到端反传至离散编码。
 
-## 2. 漂移检测与候选选择
+[共享前缀代码](../Search_Reconmendation/stage3/scripts/train_multiview_anchor_prefix_v13.py) · [任务后缀代码](../Search_Reconmendation/stage3/scripts/build_neural_rq_sid_v9_direct_private.py)
 
-检测与选择使用当前及历史窗口信息，下一窗口用于评估。Search 分支检查 query 分布与表示中心的变化；Rec 分支检查行为及相邻交互关系的变化。后续的“漂移 × 支持量”策略（V3）进一步考虑当前交互数，避免只选变化很大但很少出现的 item。最新 MovieLens 实验选出 150 个候选 item，配置中写作 K150。
+### 历史结构变体具体改了什么？
 
-候选集合与实际换码集合不同：部分候选在更新后仍保留原 SID。低支持量、漂移不确定 item 与低漂移 replay 应分别处理，任务未触发漂移时允许 no-op。
+主干在历史记录中名为 **P1/v13b**。这里的“P1 方案”是版本名，与上面的“第一个前缀位置 P1”含义不同。为避免混淆，下文优先使用描述性名称。
 
-## 3. 选择性更新与部署映射
-
-最新实验固定 shared prefix 与 Search 分支，比较两个 Rec 更新版本：
-
-| 组件 | TASR-A | TASR-B |
+| 原记录代号 | 改动 | 为什么比较它 |
 | --- | --- | --- |
-| Rec adapter | 更新 | 更新 |
-| Rec suffix codebook / decoder | 冻结 | 更新 |
-| SID 可训练参数量 | 14,528 | 114,176 |
-| 新旧编码处理 | Sticky assignment，限制无必要切换 | 逐层 Hungarian token 对齐，再选择性发布 |
-| 可改动范围 | Detector 候选的 Rec suffix | Detector 候选的 Rec suffix |
-| MovieLens 实际换码 | 25 / 18,191 items | 67 / 18,191 items |
+| P1/v13b：多视图融合主干 | 内容、搜索、推荐三种表示通过门控融合形成前缀 | 作为当前默认结构 |
+| P2：共识前缀 | 以内容表示为中心，只有限地加入搜索与推荐共同支持的信息，减小任务信号对前缀的影响 | 检查更强调共性、把任务差异留给后缀是否更好 |
+| P1-R：显式残差重构 | 保持主干前缀，在后缀训练中补入此前只计算但未纳入最终损失的残差与完整表示重构误差 | 检查后缀是否更准确地编码了前缀未解释的信息 |
+| P1-RN：残差重构 + 序列邻域增强 | 在 P1-R 上混合某 item 与推荐序列中相邻 item 的表示；仅使用初始训练期行为 | 检查加入局部共现关系能否增强推荐信息 |
 
-训练使用 selected item 与低漂移 replay，损失包括重构、拓扑、commitment 和稳定性等项。adapter 是共享函数，即使只在少量 item 上训练，直接重新量化全目录仍会改变其他 item。因此需要单独构建 **operational SID mapping**，显式固定未选 item。
+“残差”指完整目标表示减去前缀已解释的基准表示，类似让后缀补上剩余部分。“序列邻域”指用户行为序列中相邻出现的 item，而不是未来测试数据。三种变体的结果未支持替代当前主干，详见[结构消融](experiment-details.md)。
 
-TASR-B 的 Hungarian 对齐降低新旧 codebook 的 token 置换差异；发布阶段还检查候选是否与冻结 catalog 冲突。部署映射与 raw refresh 的 collision 不同：MovieLens A/B 部署映射均有 18,191 个唯一完整 SID。历史 Amazon 实验允许保留已有 collision，不能沿用零碰撞结论。
+## 3. 行为变化后，怎样选择需要更新的 item？
 
-代码：[Rec 选择性更新](../Search_Reconmendation/stage3/scripts/update_v13b_rec_adapter_selective.py)、[Rec sticky assignment](../Search_Reconmendation/stage3/scripts/materialize_v13b_temporal_rec_sid_sticky.py)、[token 对齐与发布](../Search_Reconmendation/stage3/scripts/align_and_materialize_rec_suffix.py)。
+数据按时间分成窗口：W1 表示第一个更新窗口，W2 是其后的测试窗口，以此类推。检测与候选选择只读取当前及历史信息。
 
-## 4. 下游 SID 对齐与知识保持
+搜索分支检查查询分布和查询表示中心是否变化；推荐分支检查行为关系和相邻交互关系是否变化。后续选择策略还加入当前交互量，避免只选变化大、但几乎没有训练信号的 item。这一“漂移分数 × 交互量平方根”的策略在历史记录中称为 V3。
 
-Frozen、A、B 从同一 t0 T5-small checkpoint 出发，使用相同当前窗口数据、辅助对齐池与训练预算。Frozen 保持 SID，但同样进行下游增量训练，因而是 downstream-only 对照。
+最新 MovieLens 实验选出 150 个候选，配置写作 K150。**候选不是实际换码集合**：有些 item 在后续训练与约束分配后仍使用原码。
 
-最新严格实验包含两个主任务与 `CollaborativeItem2Index` / `CollaborativeIndex2Item`。目标由生成交叉熵与稳定样本上的 teacher token KL 组成；teacher 为共同 t0 模型，KL 温度 2.0、权重 0.1。实际换码影响 target 或 Rec history 的样本关闭旧 teacher 蒸馏，避免约束模型继续预测旧编码。此 mask 也会关闭部分带已变化 Rec history 的 Search 样本蒸馏。
+训练时还混入少量低漂移 item，使用其旧表示约束更新不要破坏稳定关系；这称为稳定样本回放（replay）。没有足够变化证据时，允许整个窗口保持原码。
 
-当前实现对保留样本使用 teacher/student 的同一编码输入，并按样本启停 KL；尚未实现 teacher 使用旧历史、student 使用新历史的双视图对齐，也未实现 item-space 蒸馏。[改进方向](roadmap.md)
+## 4. 两种推荐后缀更新路线：A 和 B 差在哪里？
 
-下游为 **T5 全参数 1 epoch 增量训练**，SID adapter 参数量不代表下游可训练参数量。严格对照未启用额外 `CollaborativeSIDMigration` 任务。历史 task-local LoRA 可隔离部分跨任务干扰，但未成为最新严格实验的默认方案。
+**TASR 是原实验记录中的系列代号，记录未定义英文全称。** 本文保留它以对应模型目录和结果文件，并使用描述性名称解释方法；A/B 只是两个变体的区分标记。
 
-代码：[受影响样本与蒸馏 mask](../Search_Reconmendation/stage3/scripts/build_affected_rec_adapter_dataset.py)、[T5 训练入口](../Search_Reconmendation/stage3/scripts/run_movielens25m_temporal_distill_t5.sh)、[下游 trainer](../external/GenSAR/finetune/modules/trainer.py)。
+- **冻结码本的局部更新（TASR-A）**：保留连续表示到 token 的码本，只调整推荐 adapter，让需要变化的 item 在旧码本中重新选择编码。它的更新空间较小。
+- **刷新码本后对齐（TASR-B）**：同时调整推荐 adapter、后缀码本与表示解码器，给编码更大调整空间；之后先处理新旧 token 对应，再发布选定 item 的新编码。
 
-## 5. 下一窗口评估与成本
+两者均固定共享前缀和搜索编码，最新严格实验的下游生成模型都继续进行全参数训练。A 的低秩 SID adapter 与另一个实验中的“推荐专用 T5 LoRA”不是同一模块。
 
-报告全体 Rec / Search、detector-selected 与实际换码 target 子集、未换码子集、collision、churn 与成本。换码 target 子集只用于诊断，不能作为推理时依赖真实 target 的路由条件。
+| 组件或操作 | 冻结码本的局部更新（A） | 刷新码本后对齐（B） |
+| --- | --- | --- |
+| 推荐 adapter | 更新 | 更新 |
+| 推荐后缀码本与表示解码器 | 冻结 | 更新 |
+| 新旧 token 处理 | 在旧码本中分配，并加入保留旧码的偏好 | 先建立新旧 token 对应，再选择性发布 |
+| SID 阶段可训练参数 | 14,528 | 114,176 |
+| MovieLens 最终换码 | 25 个 item | 67 个 item |
+| 共享前缀、搜索编码和未选 item 的部署 SID | 保持 | 保持 |
 
-表示构建、检测、SID 更新、映射发布、下游训练与评估时间应分别报告。当前记录中的 15.75 / 21.88 秒仅对应 A/B 的 SID 更新训练阶段，不能解释为端到端更新时间。[完整协议与结果](experiments.md)
+A 中保留旧码的分配偏好称为 sticky assignment：只有新码相对旧码足够有利时才切换。B 的 token 对齐用 Hungarian（匈牙利）线性分配算法，让新 token 尽量对应旧 token，减少纯编号置换的影响。
+
+adapter 和码本对多个 item 共用，即使仅用少量 item 训练，直接重算全目录仍可能改变未选 item。因此还要单独生成**部署映射**：哪些 item 最终使用哪些 SID。未选 item 显式保持原码；候选新码还需避免与冻结 item 的完整 SID 冲突。MovieLens 的两套最终映射均有 18,191 个唯一完整 SID，历史 Amazon 实验则可能保留原有碰撞。
+
+[选择性更新](../Search_Reconmendation/stage3/scripts/update_v13b_rec_adapter_selective.py) · [保留旧码的分配](../Search_Reconmendation/stage3/scripts/materialize_v13b_temporal_rec_sid_sticky.py) · [token 对齐与部署映射](../Search_Reconmendation/stage3/scripts/align_and_materialize_rec_suffix.py)
+
+## 5. 生成模型怎样学会新 SID，又尽量不遗忘？
+
+固定编码、A、B 三组从同一初始 T5-small 出发，使用相同当前窗口数据、辅助对齐池和训练预算。固定编码组也继续训练 T5，因此可以作为“只更新生成模型”的对照。
+
+最新严格实验包含：
+
+1. **推荐与搜索主任务**：从历史或查询生成正确目标 SID。
+2. **item 与推荐 SID 的双向辅助任务**：从 item 信息预测编码，再从编码预测 item 信息；代码名为 CollaborativeItem2Index / CollaborativeIndex2Item。
+3. **稳定样本蒸馏**：初始模型作为教师，约束新模型在未受换码影响的样本上保留旧预测分布。实现用 token 级 KL 散度衡量差别，温度 2.0、损失权重 0.1。
+
+目标或推荐历史涉及换码 item 时，当前实现关闭整条样本的旧模型约束，以免强迫新模型继续使用旧编码。这也会关闭部分目标搜索编码未变、但推荐历史变化的搜索样本约束，是待改进处。
+
+当前教师和新模型读取同一个编码输入，尚未实现“教师看旧 SID 历史、新模型看新 SID 历史”的双视图训练，也未在相同 item 候选上对齐新旧预测。[改进计划](roadmap.md)
+
+下游 T5 全参数训练 1 epoch（一轮数据），与表中的 SID 参数量分开计数。严格对照未启用额外的 CollaborativeSIDMigration 任务，即“从旧推荐 SID 预测新 SID”的辅助迁移训练。推荐专用 LoRA 只在另一个实验中验证过：它冻结基础 T5，只训练推荐请求启用的低秩附加参数，未成为最新默认方案。
+
+[受影响样本与蒸馏开关](../Search_Reconmendation/stage3/scripts/build_affected_rec_adapter_dataset.py) · [下游训练入口](../Search_Reconmendation/stage3/scripts/run_movielens25m_temporal_distill_t5.sh) · [训练器实现](../external/GenSAR/finetune/modules/trainer.py)
+
+## 6. 怎样评估更新是否值得？
+
+下一窗口分别检查全体搜索/推荐、实际换码目标和未换码目标，报告排序指标、编码碰撞、换码量与成本。换码目标子集依据真实目标做分析，不能作为线上推理时已知正确答案的路由条件。
+
+成本需要分开列出表示构建、检测、SID 更新、映射发布和下游训练。A/B 的 15.75 / 21.88 秒仅是 SID 更新训练时间，不是全部流程耗时。[结果与解释](experiments.md) · [完整数值与计时口径](experiment-details.md)

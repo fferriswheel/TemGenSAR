@@ -2,6 +2,8 @@
 
 > Historical prototype documentation. This page records early Amazon data preparation and smoke tests; its plans, paths, and placeholder tokenizers describe that stage only. For the current system, see [method](../../docs/method.md), [experiments](../../docs/experiments.md), [code navigation](../../docs/research-status.md), and [environment setup](../../environment/README.md).
 
+> 本页是早期数据准备档案，下面的本地路径、待办状态和简化编码均指当时的原型。当前编码结构、更新方案和代号解释以[方法说明](../../docs/method.md)与[术语对照](../../docs/glossary.md)为准。
+
 ## 1. Goal
 
 Stage 3 moves the project from method design to a runnable prototype.

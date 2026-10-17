@@ -8,7 +8,7 @@
 
 [模型发布](model-selection.md) · [环境](../environment/README.md) · [资产访问](storage.md) · [源码来源](migration.md)
 
-当前最新实验为 2026-09-08 的 MovieLens-25M TASR-A / B 严格三 seed 对照。受控 Search 漂移的换码目标子集 +26.46% 属于早期 Amazon / GenSAR 实验；不同实验的作用与边界见结果页。
+最新实验为 2026-09-08 的 MovieLens-25M 对照：冻结推荐码本的局部更新与刷新码本后对齐，各用三个随机种子重复训练。它们在源文件中名为 TASR-A/B，TASR 仅是未定义英文全称的历史系列代号。[组件差异](method.md)。受控搜索漂移的换码目标子集 +26.46% 属于早期 Amazon / GenSAR 实验；不同实验的作用与边界见结果页。
 
 ## 当前实验代码
 
@@ -17,14 +17,14 @@
 | MovieLens 数据与时间窗口 | [build_movielens25m_temporal_benchmark.py](../Search_Reconmendation/stage3/scripts/build_movielens25m_temporal_benchmark.py) |
 | 转换 GenSAR 输入 | [build_movielens25m_gensar_temporal.py](../Search_Reconmendation/stage3/scripts/build_movielens25m_gensar_temporal.py) |
 | 多视图共享前缀 | [train_multiview_anchor_prefix_v13.py](../Search_Reconmendation/stage3/scripts/train_multiview_anchor_prefix_v13.py) |
-| 任务后缀 tokenizer | [build_neural_rq_sid_v9_direct_private.py](../Search_Reconmendation/stage3/scripts/build_neural_rq_sid_v9_direct_private.py) |
-| t0 下游模型 | [run_movielens25m_t0_v13b_smoke.sh](../Search_Reconmendation/stage3/scripts/run_movielens25m_t0_v13b_smoke.sh) |
-| Rec 选择性更新 | [update_v13b_rec_adapter_selective.py](../Search_Reconmendation/stage3/scripts/update_v13b_rec_adapter_selective.py) |
+| 将任务表示量化为后缀 token 的编码器 | [build_neural_rq_sid_v9_direct_private.py](../Search_Reconmendation/stage3/scripts/build_neural_rq_sid_v9_direct_private.py) |
+| 更新前的初始 T5 生成模型 | [run_movielens25m_t0_v13b_smoke.sh](../Search_Reconmendation/stage3/scripts/run_movielens25m_t0_v13b_smoke.sh) |
+| 只更新推荐分支的编码模块 | [update_v13b_rec_adapter_selective.py](../Search_Reconmendation/stage3/scripts/update_v13b_rec_adapter_selective.py) |
 | token 对齐与部署映射 | [align_and_materialize_rec_suffix.py](../Search_Reconmendation/stage3/scripts/align_and_materialize_rec_suffix.py) |
-| 受影响样本与蒸馏 mask | [build_affected_rec_adapter_dataset.py](../Search_Reconmendation/stage3/scripts/build_affected_rec_adapter_dataset.py) |
-| matched T5 蒸馏训练 | [run_movielens25m_temporal_distill_t5.sh](../Search_Reconmendation/stage3/scripts/run_movielens25m_temporal_distill_t5.sh) |
-| 严格评估与跨 seed 汇总 | [evaluate_sid_refresh_strict.py](../Search_Reconmendation/stage3/scripts/evaluate_sid_refresh_strict.py) · [aggregate_sid_refresh_multiseed.py](../Search_Reconmendation/stage3/scripts/aggregate_sid_refresh_multiseed.py) |
-| 下游 trainer / LoRA 支持 | [external/GenSAR/finetune](../external/GenSAR/finetune/) |
+| 根据换码影响决定哪些样本保留旧模型约束 | [build_affected_rec_adapter_dataset.py](../Search_Reconmendation/stage3/scripts/build_affected_rec_adapter_dataset.py) |
+| 相同预算下继续训练 T5，并保持稳定预测 | [run_movielens25m_temporal_distill_t5.sh](../Search_Reconmendation/stage3/scripts/run_movielens25m_temporal_distill_t5.sh) |
+| 下一窗口评估与多次随机训练汇总 | [evaluate_sid_refresh_strict.py](../Search_Reconmendation/stage3/scripts/evaluate_sid_refresh_strict.py) · [aggregate_sid_refresh_multiseed.py](../Search_Reconmendation/stage3/scripts/aggregate_sid_refresh_multiseed.py) |
+| 生成模型训练器与低秩附加参数支持 | [external/GenSAR/finetune](../external/GenSAR/finetune/) |
 
 脚本名称中的 smoke 是历史命名；共同 t0 的实际角色由训练依赖和[模型注册表](../assets/selected_models.json)确定。入口保留原参数与路径，使用前需按环境说明适配，不能视为一键复现命令。
 

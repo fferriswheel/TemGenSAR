@@ -4,28 +4,34 @@
 
 实验记录截至 **2026-09-08**。本页整理已保存的日志与汇总结果，未重新训练或重跑检索评估。指标为 H@10（Hit Rate）与 nDCG@10；绝对差记为 Δ，相对变化按 `100 × (method / baseline − 1)` 计算。
 
+本页缩写口径：Rec 为推荐、Search 为搜索；t0 为更新前的初始模型，W1/W2 为相邻时间窗口；seed 是控制训练随机性的种子。H@10 看目标是否进入前十，nDCG@10 进一步考虑排序位置；“均值 ± 标准差”描述多个训练种子的波动。负候选是与正确 item 一起排序的非目标 item。
+
+更新策略中，Fixed/Frozen 指保持编码但继续训练生成模型；Random 是同预算随机选择；Selective 是根据变化选择；SupportTopK 按当前交互数选择。TASR 是未定义英文全称的历史系列代号，A 为冻结推荐码本的局部更新，B 为刷新推荐码本后对齐。码本是产生离散 token 的向量中心集合。
+
 ## 1. 协议与结果范围
 
 | 实验 | 数据与变化 | 测试范围 / 候选协议 | 随机性范围 |
 | --- | --- | --- | --- |
-| 静态 GenSAR-faithful 对照 | Amazon Electronics，19,999 items，严格训练表示 | Rec / Search 各 10,000；999 negatives，beam 10 | 历史单 seed |
+| 复现的 GenSAR 静态对照 | Amazon Electronics，19,999 items，仅用训练期行为构建表示 | Rec / Search 各 10,000；999 negatives，beam 10 | 历史单 seed |
 | 早期推荐局部选择 | Amazon，当前季度更新 / 下一季度测试，固定搜索编码 | Rec / Search 各 5,000；999 negatives，beam 10 | 增量 seed 2024 / 2025 / 2026，共同 t0 |
-| R1S Search selective update | Amazon，受控 persistent Search drift，Rec 不变 | W1 更新 / W2 测试；两任务各 5,000；999 negatives，beam 10 | 增量 seed 42 / 2024 / 2025，共同 t0 |
-| Controlled Rec Drift V3 | Amazon，30% 用户 cohort 内同类别 item rotation | W6→W7 与 W9→W10；各任务 5,000；999 negatives，beam 10 | W6 增量 seed 2024 / 2025 / 2026；W9 单 seed 2024 留出 |
-| MovieLens TASR strict | 18,191 固定 items；自然 Rec 漂移；固定 Search query/tag bank | W1→W2；Rec 2,015 / Search 5,000；99 negatives，beam 10 | 增量 seed 42 / 2024 / 2025，共同 t0 |
+| 受控搜索变化与局部更新 | Amazon，持续注入查询关系变化，推荐事件不变 | W1 更新 / W2 测试；两任务各 5,000；999 negatives，beam 10 | 增量 seed 42 / 2024 / 2025，共同 t0 |
+| 受控推荐变化与选择策略 | Amazon，30% 用户群体内同类别 item 替换 | W6→W7 与 W9→W10；各任务 5,000；999 negatives，beam 10 | W6 增量 seed 2024 / 2025 / 2026；W9 单 seed 2024 留出 |
+| MovieLens 推荐编码更新的严格对照 | 18,191 固定 items；自然推荐变化；固定查询/标签库构造搜索控制任务 | W1→W2；Rec 2,015 / Search 5,000；99 negatives，beam 10 | 增量 seed 42 / 2024 / 2025，共同 t0 |
 
 表中 negatives 是每个目标的负候选数，候选还包括一个正例。它们是采样候选协议下的结果，不能当作全目录检索结果。MovieLens 的 Search 是稳定控制任务，不能用于论证自然 Search 漂移。跨数据集、候选规模或划分方式的绝对指标不直接比较。
 
 ## 2. 静态 SID：GenSAR 下游对照
 
-在严格 paired leave-two-out 协议下，对比 GenSAR-faithful SID 与 v13b SID，两者使用 matched collision-group Sinkhorn、T5-small、6-task 训练、3 epochs，并按各自 validation mean nDCG@5 选择 checkpoint。
+对每个任务，取相同用户最后两条有效事件分别作为验证、测试，称为严格配对的 leave-two-out 划分。比较复现的 GenSAR 编码与本项目多视图共享前缀方案（v13b）；均使用 T5-small、六类任务、三轮训练，按验证集联合 nDCG@5 选择模型。
+
+两组都对发生编码碰撞的 item 做 Sinkhorn 分配调整，原表简写为 CG（collision group，碰撞组）；matched CG 指采用同类处理，不代表最终碰撞率相同。
 
 | SID | Rec H@10 | Rec nDCG@10 | Search H@10 | Search nDCG@10 |
 | --- | ---: | ---: | ---: | ---: |
 | GenSAR-faithful + CG | 0.0374 | 0.01946 | 0.0534 | 0.02980 |
 | v13b + matched CG | **0.0791** | **0.05034** | **0.1240** | **0.07740** |
 
-这是本仓库复现协议中的静态对照，并非直接引用 GenSAR 论文指标，也不是多 seed 的 SOTA 比较。每个任务内 validation / test 使用相同用户的相邻未来事件；受原始日期粒度限制，部分配对事件同日，顺序仍按原始序列区分。
+这是本仓库复现协议中的静态对照，并非直接引用 GenSAR 论文指标，也不是对多种最新方法的多次独立训练比较。每个任务内验证/测试使用相同用户的相邻未来事件；受原始日期粒度限制，部分配对事件同日，顺序仍按原始序列区分。
 
 [协议、划分审计与原始结果记录](../Search_Reconmendation/files/PhaseSummary/实验结果对齐_2026-08-12.md)
 
@@ -33,7 +39,7 @@
 
 ### 设定
 
-R1S 在同一 shared-prefix 组内交换 dominant query，从 W1 起持续替换目标事件的 query，item 不变；共注入 75 个 item。Search selector 选中 122 个 item，仅训练 Search adapter，固定共享前缀与 Rec 分支，最终实际改变 15 个 item 的 Search SID。
+搜索局部更新实验（记录编号 R1S）在相同共享前缀的 item 之间交换主要查询，从 W1 起持续替换相关事件的查询、保持 item 不变，共注入 75 个 item。检测器选中 122 个候选，只训练搜索表示的小模块，固定共享前缀与推荐分支，最终 15 个 item 实际更换搜索 SID。
 
 Fixed、matched-Random、Selective 使用相同 t0、数据、训练任务和预算。下一窗口 5,000 条 Search 测试样本中，**119 条样本的目标属于 Selective 实际换码集合**；所有对比方法在这个相同子集上评估。该子集是基于已发布 mapping 的诊断分组，并非随机样本或推理时的路由条件。
 
@@ -64,9 +70,9 @@ seed 2024 的机器可读子集结果为 0.1292131783 → 0.1605410968，Δ=0.03
 
 [阶段6 R1S：完整协议与三 seed 表](../Search_Reconmendation/files/PhaseSummary/阶段6_R1S_SearchSelectiveAdapter_2026-09-02.md) · [seed 2024 子集 CSV](../Search_Reconmendation/stage3/results/temporal_search_r1s_subgroups/subgroup_metrics.csv)
 
-## 4. 受控 Rec 漂移：收益与 selector 边界
+## 4. 受控推荐漂移：收益与选择策略的边界
 
-V3 在 drift rank score 上加入当前影响量：`score = drift_rank_score × sqrt(current_events)`，要求当前支持量至少 5，按预算选择 top-K。K=51 在 W9 留出前确定。
+“漂移 × 交互量”选择策略（原名 V3）在漂移分数上加入当前影响量：`score = drift_rank_score × sqrt(current_events)`，要求当前支持量至少 5，按预算选择 top-K。K=51 在 W9 留出前确定。
 
 ### W6 更新 → W7 测试，三 seed 均值
 
@@ -91,9 +97,9 @@ V3 相对 Fixed 的 Rec nDCG 约 +5.02%，但未超过 SupportTopK。V3-only 换
 
 [阶段12完整记录](../Search_Reconmendation/files/PhaseSummary/阶段12_ControlledRecDrift_W6W9完整评估_2026-09-04.md) · [W6 三 seed JSON](../Search_Reconmendation/stage3/results/controlled_rec_w6_v3_three_seed/summary.json) · [W9 留出 JSON](../Search_Reconmendation/stage3/results/controlled_rec_w9_k51_holdout/summary.json)
 
-## 5. MovieLens-25M：最新严格时序对照
+## 5. MovieLens-25M：冻结码本与刷新码本的严格对照
 
-三组均使用 43,882 条 Rec update、1,000 条 Search replay、相同 K150 对齐池、两类辅助任务各 150 条，从同一 t0 出发训练 T5-small 1 epoch / 353 steps。辅助迁移任务关闭；蒸馏 mask 随实际换码影响范围变化，是方法定义的一部分。seed 2026 为开发 pilot，不混入正式三 seed 均值。
+三组均使用 43,882 条当前推荐样本、1,000 条旧搜索回放样本、相同的 150-item 对齐池，两类辅助任务各 150 条；从同一初始模型出发训练一轮，共 353 个优化步骤。额外的“旧推荐 SID→新 SID”迁移任务关闭。蒸馏样本开关随实际换码影响范围变化，是方法定义的一部分；种子 2026 是开发试验，不混入正式三种子的均值。
 
 ### 总体指标：均值 ± 标准差
 
@@ -163,7 +169,7 @@ B 在并集上的相对增益约 +5.13%。这些子集的 row-bootstrap 95% CI �
 | SID adapter 训练范围 | 核心训练时间 | 推荐 nDCG@10 | 搜索 nDCG@10 |
 | --- | ---: | ---: | ---: |
 | 全部 19,999 个 item | 180.2 s | 0.03179 | 0.03474 |
-| 63 个漂移 item + 126 个稳定 replay item | 5.8 s | 0.03148 | 0.03467 |
+| 63 个漂移 item + 126 个低变化回放 item | 5.8 s | 0.03148 | 0.03467 |
 
 计时是原运行中的 adapter 核心时间，尚未经过统一进程的重复 profiling，也不包括下游生成模型训练。
 

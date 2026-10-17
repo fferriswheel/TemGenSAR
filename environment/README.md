@@ -1,5 +1,7 @@
 # 研究环境与运行路径
 
+本页面向运行实验的环境准备。研究代码把 SID（item 的语义编码）训练和下游生成模型训练分开；需要同时准备依赖、数据与对应编码映射。
+
 ## 参考环境
 
 实验服务器环境记录为 Python **3.12.2**、PyTorch **2.6.0+cu124**、NumPy **1.26.4**、pandas **2.2.3**、Transformers **5.9.0**。
@@ -32,10 +34,10 @@ python -m pytest Search_Reconmendation/stage3/tests -q
 | /data/cjk/Search_Reconmendation | Search_Reconmendation/ |
 | /data/cjk/external/GenSAR | external/GenSAR/ |
 
-部分 shell 与 Python 脚本保留上述绝对路径，默认 clone 后不能直接执行全流程。运行前检查所用脚本的 ROOT、GENSAR_ROOT、输入资产和输出路径，将它们适配为实际 checkout 与数据目录。HF 下载目录也需接入相应模型与 SID 参数。
+部分 shell 与 Python 脚本保留上述绝对路径，默认 clone 后不能直接执行全流程。运行前检查所用脚本的 ROOT、GENSAR_ROOT、输入资产和输出路径，将它们适配为实际 checkout 与数据目录。Hugging Face 下载目录也需接入相应模型与 SID 映射参数，确保权重和编码版本匹配。
 
-实验顺序为：数据与时间划分 → 训练期表示与 t0 SID → t0 生成模型 → 当前窗口检测与 SID 更新 → matched 下游增量训练 → 下一窗口评估。[代码入口](../docs/research-status.md) · [方法](../docs/method.md) · [数据依赖](../docs/storage.md)
+实验顺序为：数据按时间划分 → 提取训练期向量表示并建立初始 SID → 训练初始生成模型 → 当前窗口检测变化与更新 SID → 各组使用相同预算继续训练生成模型 → 下一窗口评估。脚本中的 t0 指初始阶段。[代码入口](../docs/research-status.md) · [方法](../docs/method.md) · [数据依赖](../docs/storage.md)
 
 ## 发布模型的加载验证
 
-TASR-B seed 42 已在 Python 3.12、PyTorch 2.6.0+cu118、Transformers 4.52.3 下完成权重加载与有限值前向计算。原始模型使用 Transformers 5.9.0 保存，4.52.3 的 tokenizer 兼容参数见[模型发布](../docs/model-selection.md)。加载验证未修改模型文件，也未重跑排名评估。
+刷新推荐码本后对齐的模型（历史代号 TASR-B，TASR 无已定义英文全称），随机种子 42，已在 Python 3.12、PyTorch 2.6.0+cu118、Transformers 4.52.3 下完成权重加载与有限值前向计算。原始模型使用 Transformers 5.9.0 保存，4.52.3 的 tokenizer 兼容参数见[模型发布](../docs/model-selection.md)。加载验证未修改模型文件，也未重跑排名评估。
