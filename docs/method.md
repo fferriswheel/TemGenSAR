@@ -1,6 +1,8 @@
 # 方法与框架
 
-本页描述截至 2026-09-08 的已实现系统。最新严格时序实验为 MovieLens-25M 的 TASR-A / TASR-B；受控 Search 漂移和 task-local LoRA 属于其他实验分支。
+本页描述截至 2026-09-08 的已实现系统。阅读顺序是：先给 item 建立编码，再检测行为变化，只更新需要变化的后缀，最后让生成模型适应新编码。实验动机与结果见[核心实验](experiments.md)，代号和术语见[名称对照](glossary.md)。
+
+最新 MovieLens 对照包括两条路线：**冻结码本的局部更新（TASR-A）**与**刷新码本后对齐（TASR-B）**。码本是将连续表示量化成离散 token 的向量集合；A 只改任务 adapter，B 也允许码本与解码器变化。受控 Search 漂移和推荐专用 LoRA 属于其他实验分支。
 
 ## 1. 模块化 SID 与 t0 模型
 
@@ -13,7 +15,7 @@ Rec SID(i)    = [P1(i), P2(i) | R1(i), R2(i)]
 
 每层 codebook 的典型大小为 256。前缀是量化后的共享表示；后缀保留任务信息。完整 SID、item ID 与下游 token 词表之间必须保持一致，不能仅替换模型权重而沿用不匹配的映射。
 
-P1/v13b 使用 common、行为、Search 多视图信号构建共享 anchor，通过 gated fusion 与量化得到共享前缀。任务 adapter 以共享 latent 为条件生成专属表示，再量化为后缀。输入表示由对应数据构建器提供；MovieLens 的 Search 使用固定 query/tag bank。
+主干方案在历史记录中称为 P1/v13b：融合内容（common）、行为与 Search 三种表示，先学习一个共享的连续表示（anchor），再量化为前缀。任务 adapter 是学习搜索或推荐专属表示的小模块，以共享表示为条件，再产生任务后缀。输入表示由对应数据构建器提供；MovieLens 的 Search 使用固定 query/tag bank。
 
 ```mermaid
 flowchart TB
@@ -40,11 +42,11 @@ flowchart TB
 
 SID 学习包括表示重构、拓扑保持、量化 commitment，以及对应分支的 relevance / identity 等约束；并非所有实验使用相同 loss。当前主干 SID 训练与 T5 排序训练分阶段进行，尚未将序列条件排序目标端到端反传至离散 SID。
 
-代码：[共享前缀训练](../Search_Reconmendation/stage3/scripts/train_multiview_anchor_prefix_v13.py)、[任务后缀 tokenizer](../Search_Reconmendation/stage3/scripts/build_neural_rq_sid_v9_direct_private.py)。P2 consensus 与 P1-R / P1-RN 是对照变体，未替代 P1 主干。
+代码：[共享前缀训练](../Search_Reconmendation/stage3/scripts/train_multiview_anchor_prefix_v13.py)、[任务后缀 tokenizer](../Search_Reconmendation/stage3/scripts/build_neural_rq_sid_v9_direct_private.py)。共识前缀（P2）、增加残差重构（P1-R）及进一步增加序列邻域信息（P1-RN）是对照变体，未替代当前主干；[结构实验解释](experiment-details.md)。
 
 ## 2. 漂移检测与候选选择
 
-检测与选择使用当前及历史窗口信息，下一窗口用于评估。历史 Search 分支使用 query 分布 JS divergence 与 centroid shift；Rec 分支利用行为/transition 变化，后续 V3 加入当前事件支持量。最新 MovieLens 实验采用 detector K150 候选池。
+检测与选择使用当前及历史窗口信息，下一窗口用于评估。Search 分支检查 query 分布与表示中心的变化；Rec 分支检查行为及相邻交互关系的变化。后续的“漂移 × 支持量”策略（V3）进一步考虑当前交互数，避免只选变化很大但很少出现的 item。最新 MovieLens 实验选出 150 个候选 item，配置中写作 K150。
 
 候选集合与实际换码集合不同：部分候选在更新后仍保留原 SID。低支持量、漂移不确定 item 与低漂移 replay 应分别处理，任务未触发漂移时允许 no-op。
 

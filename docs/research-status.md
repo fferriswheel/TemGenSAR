@@ -4,6 +4,8 @@
 
 [背景与相关工作](background.md) → [方法与框架](method.md) → [实验结果](experiments.md) → [后续研究](roadmap.md)
 
+首次阅读建议先看实验主文的问题与结论，再按需查看[实验细节](experiment-details.md)。历史代号与技术词汇见[术语与名称对照](glossary.md)。
+
 [模型发布](model-selection.md) · [环境](../environment/README.md) · [资产访问](storage.md) · [源码来源](migration.md)
 
 当前最新实验为 2026-09-08 的 MovieLens-25M TASR-A / B 严格三 seed 对照。受控 Search 漂移的换码目标子集 +26.46% 属于早期 Amazon / GenSAR 实验；不同实验的作用与边界见结果页。
