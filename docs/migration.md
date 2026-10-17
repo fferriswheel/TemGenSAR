@@ -1,30 +1,23 @@
-# 备份到 GitHub 的迁移记录
+# 源码来源与验证记录
 
-- 整理日期：2026-10-15。
-- 源快照：2026-09-07 完整包，叠加 2026-09-08 postwork 增量包。
-- 目标：`fferriswheel/TemGenSAR`，保留仓库原有初始提交，追加代码快照。
+## 源码基点
 
-## 导入范围
+研究快照由 2026-09-07 完整归档与 2026-09-08 postwork 增量归档合并形成，同路径采用较新的增量版本。初始导入提交为 `ce1ddd8511ef3bc863b90dcc3ac91c46ed1b3b68`，包含 354 个原始源码、说明和选定汇总文件；后续修改以 Git 历史为准。
 
-导入 354 个原始源码、说明及选定的汇总结果文件，约 2.48 MiB。`assets/source_snapshot.tsv` 记录这些文件的原始 SHA-256；新增的仓库文档、依赖表、清单和工具另计。
+原始哈希见 [source_snapshot.tsv](../assets/source_snapshot.tsv)，归档校验值见 [archives.json](../assets/archives.json)。两份源归档于 2026-10-15 通过 SHA-256 与完整 zstd 压缩流检查。
 
-保留 `Search_Reconmendation/` 与 `external/GenSAR/` 原有服务器层级；完整包和增量包中的同名文件采用增量版本。两份 GenSAR 分别保留，新增 teacher distillation 等实现位于后期实际运行的副本中。
+保留 Search_Reconmendation 与 external/GenSAR 的原层级及不同修改的两份 GenSAR 副本。后期实际下游蒸馏实现位于根目录 external/GenSAR；上游版本见[第三方来源](third-party.md)。
 
-模型、原始/处理数据、SID 映射、embedding、逐样本预测、日志、缓存和嵌套 `.git` 不进入新提交。旧基线 Git 元数据、完整实验结果及其余备份内容仍在原始压缩包中。备份中的电池研究、临时论文文件和私人会话记录不属于本仓库范围。
+## 代码、结果与归档边界
 
-两份原备份保持原样，SHA-256 均与附带校验文件相符；完整压缩流读取也正常完成。本次没有删除模型，没有创建云端模型/数据仓库，没有上传大文件。
+Git 中保留源码、说明和汇总指标。模型权重、原始/处理数据、embedding、逐样本预测、日志、缓存与嵌套 Git 元数据未导入普通 Git 历史。精选 MovieLens 模型随后发布至 Hugging Face，版本与验证记录见[模型发布](model-selection.md)。
 
-## 验证范围
+[PhaseSummary](../Search_Reconmendation/files/PhaseSummary/) 与早期 stage3 README 是历史研究档案，包含当时的计划、环境路径与阶段性判断。它们用于追踪实验依据；当前方法、结果范围和后续计划分别以 [method](method.md)、[experiments](experiments.md)、[roadmap](roadmap.md) 为入口。
 
-- 逐文件核对全部 354 个导入文件的 SHA-256 和大小。
-- 核对两个项目目录中的全部 230 个原始 Python / shell 源文件均已导入，并保留备份中的可执行标记。
-- 180 个 Python 文件语法、52 个 Bash 文件语法和新增说明文档中的本地链接检查通过。
-- 对恢复工具使用小型合成压缩包，检查选定文件恢复、输出校验值、路径穿越拒绝及已有文件保护；用真实清单测试模型目录列举。
-- 提交前用 `scripts/check_repository.py` 检查 Git 索引中的大文件、二进制、运行产物和常见凭据模式。该检查有明确的模式范围，不能替代人工审阅。
-- 原有 `test_export_kuaisar_initialization_jsonl.py` 和 `test_import_gensar_sid_mapping.py` 共 **4 项测试通过**。
+## 已执行检查
 
-本地环境为 Windows / Python 3.9，没有 PyTorch 和 DuckDB，部分原测试在收集时因缺少依赖而停止。因此没有完成整个研究测试集，也没有重跑训练；这次迁移不代表已验证干净 Linux 环境下的完整复现。
+初始导入阶段已核对 354 个文件的哈希/大小、全部 230 个原始 Python / shell 源文件及可执行标记，并完成 180 个 Python 与 52 个 Bash 文件的语法检查。恢复工具通过选定恢复、路径穿越拒绝和已有文件保护检查；两个已有数据导出/映射测试模块共 4 项测试通过。
 
-## 后续提交
+受依赖与环境限制，初始导入阶段未完成全部研究测试或 GPU 训练。后续模型发布完成了文件一致性、SID 约束及代表性 checkpoint 加载/前向检查，历史排名指标未重算。
 
-在仓库根目录执行 `git add .` 后，先运行 `python scripts/check_repository.py`，确认仅有代码和适合公开的汇总文件，再提交推送。恢复到仓库内的大文件会受到 `.gitignore` 规则排除。
+这些验证限定于来源完整性、语法与产物一致性，不代表干净环境下的端到端复现。每次提交可使用 `python scripts/check_repository.py` 检查 Git 索引中的大文件、运行产物及常见凭据模式。

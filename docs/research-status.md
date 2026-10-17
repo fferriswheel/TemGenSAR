@@ -1,32 +1,33 @@
-# 研究进展导航
+# 研究与代码导航
 
-本页导航到备份时的研究状态，实验数值以对应记录和汇总表为准。
+## 研究文档
 
-## 最新工作：MovieLens-25M 与 TASR
+[背景与相关工作](background.md) → [方法与框架](method.md) → [实验结果](experiments.md) → [后续研究](roadmap.md)
 
-- [阶段16：MovieLens-25M benchmark 审计](../Search_Reconmendation/files/PhaseSummary/阶段16_MovieLens25M_TemporalSearchRec可行性审计_2026-09-07.md)
-- [阶段17：P2 共识前缀](../Search_Reconmendation/files/PhaseSummary/阶段17_MovieLens25M_P2共识前缀实验_2026-09-07.md)
-- [阶段18：P1 条件残差与 Rec 信息](../Search_Reconmendation/files/PhaseSummary/阶段18_P1条件残差与Rec信息增强对比_2026-09-08.md)
-- [阶段19：TASR-A / TASR-B 与三 seed](../Search_Reconmendation/files/PhaseSummary/阶段19_TASR两种时序更新实验_2026-09-08.md)
-- [严格三 seed 汇总](../Search_Reconmendation/stage3/results/movielens25m_tasr_strict_w1_w2_three_seed/summary.json)
-- [精选模型、Hugging Face 固定版本与下载](model-selection.md)
+[模型发布](model-selection.md) · [环境](../environment/README.md) · [资产访问](storage.md) · [源码来源](migration.md)
 
-MovieLens benchmark 使用固定 query/tag bank，适合分析自然 Rec drift 和 Search retention；不能据此声称存在自然 Search drift。备份记录中 TASR-B 的 Rec 排序提升可复现，但实际效应很小，Rec H@10 未变；它与 TASR-A 的差异不显著。
+当前最新实验为 2026-09-08 的 MovieLens-25M TASR-A / B 严格三 seed 对照。受控 Search 漂移的换码目标子集 +26.46% 属于早期 Amazon / GenSAR 实验；不同实验的作用与边界见结果页。
 
-## 关键代码
+## 当前实验代码
 
-| 工作 | 入口（相对 `Search_Reconmendation/stage3/scripts/`） |
+| 阶段 | 入口 |
 | --- | --- |
-| Rec adapter 选择性更新 | `update_v13b_rec_adapter_selective.py` |
-| token 对齐与选择性 SID 发布 | `align_and_materialize_rec_suffix.py` |
-| matched downstream 数据 | `build_affected_rec_adapter_dataset.py` |
-| 下游 T5 蒸馏 | `run_movielens25m_temporal_distill_t5.sh` |
-| 严格评估与跨 seed 汇总 | `evaluate_sid_refresh_strict.py`、`aggregate_sid_refresh_multiseed.py` |
+| MovieLens 数据与时间窗口 | [build_movielens25m_temporal_benchmark.py](../Search_Reconmendation/stage3/scripts/build_movielens25m_temporal_benchmark.py) |
+| 转换 GenSAR 输入 | [build_movielens25m_gensar_temporal.py](../Search_Reconmendation/stage3/scripts/build_movielens25m_gensar_temporal.py) |
+| 多视图共享前缀 | [train_multiview_anchor_prefix_v13.py](../Search_Reconmendation/stage3/scripts/train_multiview_anchor_prefix_v13.py) |
+| 任务后缀 tokenizer | [build_neural_rq_sid_v9_direct_private.py](../Search_Reconmendation/stage3/scripts/build_neural_rq_sid_v9_direct_private.py) |
+| t0 下游模型 | [run_movielens25m_t0_v13b_smoke.sh](../Search_Reconmendation/stage3/scripts/run_movielens25m_t0_v13b_smoke.sh) |
+| Rec 选择性更新 | [update_v13b_rec_adapter_selective.py](../Search_Reconmendation/stage3/scripts/update_v13b_rec_adapter_selective.py) |
+| token 对齐与部署映射 | [align_and_materialize_rec_suffix.py](../Search_Reconmendation/stage3/scripts/align_and_materialize_rec_suffix.py) |
+| 受影响样本与蒸馏 mask | [build_affected_rec_adapter_dataset.py](../Search_Reconmendation/stage3/scripts/build_affected_rec_adapter_dataset.py) |
+| matched T5 蒸馏训练 | [run_movielens25m_temporal_distill_t5.sh](../Search_Reconmendation/stage3/scripts/run_movielens25m_temporal_distill_t5.sh) |
+| 严格评估与跨 seed 汇总 | [evaluate_sid_refresh_strict.py](../Search_Reconmendation/stage3/scripts/evaluate_sid_refresh_strict.py) · [aggregate_sid_refresh_multiseed.py](../Search_Reconmendation/stage3/scripts/aggregate_sid_refresh_multiseed.py) |
+| 下游 trainer / LoRA 支持 | [external/GenSAR/finetune](../external/GenSAR/finetune/) |
 
-下游 GenSAR 的 teacher checkpoint、token KL distillation、`_distill_weight`、LoRA 改动位于根目录 `external/GenSAR/finetune/`；较早的 `Search_Reconmendation/external/GenSAR/` 不包含相同改动。
+脚本名称中的 smoke 是历史命名；共同 t0 的实际角色由训练依赖和[模型注册表](../assets/selected_models.json)确定。入口保留原参数与路径，使用前需按环境说明适配，不能视为一键复现命令。
 
-## 早期实验
+## 证据档案
 
-[PhaseSummary](../Search_Reconmendation/files/PhaseSummary/) 保留阶段 0–19 及方法、实验对齐记录，包括 controlled Rec drift、KuaiSAR、选择性适配器与多窗口评估。[原 stage3 README](../Search_Reconmendation/stage3/README.md) 描述早期数据和原型准备，阅读当前状态时优先查看阶段19。
+[PhaseSummary](../Search_Reconmendation/files/PhaseSummary/) 保留阶段0–19及方法、实验对齐记录；[results](../Search_Reconmendation/stage3/results/)保存选定机器可读汇总。档案中的“下一步”“当前”等表述指对应记录日期；部分计划后来被修正，结论以明确的实验协议与结果来源为准。
 
-备份时的下一步计划是构造 controlled Rec drift severity curve，并与 Frozen / TASR-A / TASR-B / SupportTopK 对照。它是研究计划，不是已经完成的实验结论。
+早期数据准备入口见 [stage3 README](../Search_Reconmendation/stage3/README.md)。第三方 README 保留其上游说明与署名，来源见[第三方源码](third-party.md)。

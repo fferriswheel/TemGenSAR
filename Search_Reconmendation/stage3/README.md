@@ -1,5 +1,7 @@
 # Stage 3: Data and Prototype Preparation
 
+> Historical prototype documentation. This page records early Amazon data preparation and smoke tests; its plans, paths, and placeholder tokenizers describe that stage only. For the current system, see [method](../../docs/method.md), [experiments](../../docs/experiments.md), [code navigation](../../docs/research-status.md), and [environment setup](../../environment/README.md).
+
 ## 1. Goal
 
 Stage 3 moves the project from method design to a runnable prototype.

@@ -1,69 +1,80 @@
 # TemGenSAR
 
-生成式搜索与推荐的研究代码，探索 **shared prefix / task-specific suffix Semantic ID (SID)**、时序漂移检测、选择性 Rec SID 更新，以及下游 T5/LoRA 对齐。
+**Temporal Semantic IDs for Generative Search and Recommendation**
 
-当前代码快照来自 **2026-09-07 完整服务器备份 + 2026-09-08 增量备份**。最新研究记录覆盖 MovieLens-25M、TASR-A / TASR-B 和严格三 seed 评估；早期实验包括 Amazon Electronics、controlled Rec drift 和 KuaiSAR。
+TemGenSAR 研究联合生成式搜索与推荐中的 Semantic ID（SID）演化：将 item 表示为 **共享前缀 + 任务专属后缀**，在行为分布变化时选择性更新任务后缀，并使下游生成模型适应新的 SID。研究重点是更新收益、编码稳定性、跨任务保持与更新成本之间的关系。
 
-## 从哪里开始
+本仓库提供研究实现、实验汇总与阶段记录。当前实验快照截至 **2026-09-08**；文档更新不代表新增训练结果。
 
-- [最新研究进展与入口](docs/research-status.md)
-- [最新模型的筛选依据与取舍](docs/model-selection.md)
-- [模型、数据的存储与恢复](docs/storage.md)
-- [环境与运行路径](environment/README.md)
-- [完整模型/张量清单](assets/model_files.tsv)
-- [大文件与符号链接清单](assets/backup_manifest.tsv)
+## 文档
 
-## 目录
+| 内容 | 入口 |
+| --- | --- |
+| Background / related work：背景、已有方法与问题定位 | [背景与相关工作](docs/background.md) |
+| Pipeline / architecture：SID 构建、时序更新与下游对齐 | [方法与框架](docs/method.md) |
+| Experiments：协议、总体指标、换码子集与失败案例 | [实验结果](docs/experiments.md) |
+| Roadmap：方法改进与待补实验 | [后续研究](docs/roadmap.md) |
+| Checkpoints：Hugging Face 模型、固定版本与下载 | [模型发布](docs/model-selection.md) |
+| Reproduction：环境、数据依赖与代码入口 | [环境](environment/README.md) · [资产访问](docs/storage.md) · [代码导航](docs/research-status.md) |
+
+## 研究问题
+
+[GenSAR](https://doi.org/10.1145/3705328.3748071) 等方法利用离散 item 编码统一搜索与推荐。协同行为随时间变化后，固定 SID 可能过时；更新 SID 又会改变生成目标和历史输入，带来迁移成本。已有持续 tokenization、SID refresh/alignment 与可微 SID 工作为这一问题提供了基础，详见[相关工作](docs/background.md)。
+
+TemGenSAR 进一步考察：**在两个任务共享生成模型的条件下，能否只更新需要变化的任务后缀，并使下游排序收益覆盖换码造成的扰动？**
+
+## Pipeline
+
+```mermaid
+flowchart LR
+    A["t0 内容与行为信号"] --> B["P1 多视图共享前缀<br/>任务专属后缀"]
+    B --> C["Search SID / Rec SID<br/>联合生成模型初始化"]
+    D["当前窗口行为"] --> E["任务与 item 漂移检测"]
+    C --> F["选择性后缀更新<br/>稳定 item replay"]
+    E --> F
+    F --> G["Sticky 或 refresh-align<br/>选择性发布 SID"]
+    G --> H["下游增量训练<br/>SID 对齐与稳定样本蒸馏"]
+    C --> H
+    H --> I["下一窗口评估<br/>效果 / 保持 / churn / 总成本"]
+```
+
+最新 MovieLens 实验固定共享前缀与 Search SID，仅更新 Rec 后缀。TASR-A 冻结 codebook；TASR-B 刷新 Rec codebook 后执行 token 对齐与选择性发布。下游采用 T5-small 全参数增量训练；历史 task-local LoRA 是独立实验分支。[实现细节与架构图](docs/method.md)
+
+## 实验概览
+
+相对提升均按 `(method − baseline) / baseline` 计算。不同数据集、候选规模和评估子集之间不直接比较绝对指标。
+
+| 实验 | 对比与范围 | nDCG@10 | 证据范围 |
+| --- | --- | --- | --- |
+| Amazon / GenSAR，受控 Search 漂移 | Selective vs Fixed，实际换码目标子集 | **0.12625 → 0.15965，约 +26.46%** | 119 条样本，3 个增量训练 seed；全体 Search 为 0.04112 → 0.04148 |
+| Amazon，受控 Rec 漂移 W6→W7 | V3 vs Fixed，全体 Rec | 0.019476 → 0.020050，约 +2.95% | 3 seed；对 SupportTopK 的优势较弱 |
+| MovieLens-25M，自然 Rec 漂移 W1→W2 | TASR-B vs Frozen，全体 Rec | 0.286285 → 0.286628，约 +0.12% | 3 seed；H@10 不变，Search 基本保持 |
+| MovieLens-25M，同一实验 | TASR-B vs Frozen，A/B 换码目标并集 | 0.029864 → 0.031397，约 +5.13% | 326 条样本；子集 bootstrap 区间仍跨 0 |
+
+**26.46% 对应受控 Search 漂移下的换码目标子集**，不能外推为整体搜推效果或自然漂移收益。完整表格、协议、统计范围及失败案例见[实验结果](docs/experiments.md)。
+
+## 模型与数据
+
+精选的 **10 个 MovieLens-25M T5-small checkpoint** 与配套 SID 已上传至 [Hugging Face：Ferriswheel1412/TemGenSAR-MovieLens25M](https://huggingface.co/Ferriswheel1412/TemGenSAR-MovieLens25M)。模型仓库目前为**私有**，访问需要账号权限；GitHub 公开代码不自动授予模型访问权。
+
+- 模型：共同 t0、Frozen / TASR-A / TASR-B 各 3 seed。
+- 固定 revision：`947652476014c1a04ba6b3d59e27896b7adc804d`。
+- 配套资产：SID checkpoint、部署映射、item catalog、汇总指标与校验清单。
+- [模型目录与下载示例](docs/model-selection.md)；[数据依赖与可复现范围](docs/storage.md)。
+
+## 代码与运行
 
 ```text
-Search_Reconmendation/          原项目目录，保留历史拼写和层级
-  stage3/scripts/               数据构建、SID、漂移检测、训练与汇总
-  stage3/tests/                 原有测试
-  stage3/results/               选定的汇总指标；逐样本结果留在备份
-  files/PhaseSummary/           分阶段实验记录
-  external/                    早期基线源码
-external/GenSAR/                后期实际使用的 GenSAR，含 LoRA / 蒸馏改动
-assets/                        文件位置、大小、来源备份和校验值
-environment/                   环境说明与服务器依赖参考
-scripts/                       仓库检查和按需恢复工具
-docs/                          研究导航和存储说明
+Search_Reconmendation/stage3/scripts/   数据、表示、SID、时序更新与评估
+Search_Reconmendation/stage3/results/   机器可读汇总结果
+Search_Reconmendation/stage3/tests/     研究测试
+Search_Reconmendation/files/PhaseSummary/  历史实验记录
+external/GenSAR/                       后期下游实现，含蒸馏与 LoRA
+Search_Reconmendation/external/         早期基线与第三方源码
+docs/                                 研究文档
+assets/                               模型注册表与来源清单
 ```
 
-两处 GenSAR 源码有不同的本地改动，不能互相覆盖。上游均来自 [TengShi-RUC/GenSAR](https://github.com/TengShi-RUC/GenSAR)，来源和版本见 [third-party.md](docs/third-party.md)。
+运行环境为 Linux、Bash、Python 3.12 与 PyTorch。安装与路径适配见[环境说明](environment/README.md)，实验脚本入口见[代码导航](docs/research-status.md)。训练和评估还需要对应数据及 SID 资产；目前尚未完成干净环境下的端到端复现验证。
 
-## 运行准备
-
-研究环境为 **Linux + Python 3.12 + PyTorch**。历史 shell 脚本使用 Bash、CUDA 和 `/usr/bin/time`，不适合直接在 Windows PowerShell 中运行。
-
-部分脚本使用绝对路径 `/data/cjk/Search_Reconmendation` 和 `/data/cjk/external/GenSAR`。在一个尚未使用的 Linux 工作目录中，把本仓库克隆到 `/data/cjk` 可保持这些路径；其他位置需调整脚本参数或路径。已有 `/data/cjk` 时先参照恢复说明准备单独的恢复目录。
-
-```bash
-git clone git@github.com:fferriswheel/TemGenSAR.git /data/cjk
-cd /data/cjk
-conda create -n temgensar python=3.12
-conda activate temgensar
-# 根据 CUDA/驱动安装合适的 PyTorch，再安装研究依赖
-python -m pip install -r requirements-dev.txt
-python -m pytest Search_Reconmendation/stage3/tests -q
-```
-
-`requirements.txt` 依据服务器导出的直接依赖整理，并非经过干净环境验证的完整锁文件；较早 GenSAR 的依赖版本不同。见 [环境说明](environment/README.md)。恢复对应数据、SID 映射和模型后，再运行实验入口。
-
-## 代码与大文件
-
-GitHub 保存源码、配置、实验说明和选定的汇总指标。模型权重、训练输入、SID 映射、embedding、逐样本预测、日志、缓存和备份压缩包保存在原备份中。
-
-精选的 **10 个 MovieLens-25M 下游 checkpoint 与配套 SID** 已上传到 [Ferriswheel1412/TemGenSAR-MovieLens25M](https://huggingface.co/Ferriswheel1412/TemGenSAR-MovieLens25M) 私有模型仓库，固定 revision 为 `947652476014c1a04ba6b3d59e27896b7adc804d`。主候选为 TASR-B，同时保留 TASR-A、Frozen 三 seed 和共同 t0；[筛选说明](docs/model-selection.md)包含效果、取舍和按需下载方法。访问私有仓库需要有权限的 Hugging Face 账号。
-
-两份压缩包已于 2026-10-15 通过 SHA-256 校验。`assets/archives.json` 固定文件名和校验值；`backup_manifest.tsv` 标明每个资产应从完整包还是增量包恢复。模型记录中的 `.pt` / `.pth` 也可能是 embedding 或其他张量，须结合文件名和实验记录判断用途。
-
-```bash
-# 仅列出资产，不读取压缩包、不写文件
-python scripts/restore_assets.py --include 'Search_Reconmendation/stage3/runs/movielens*' --list
-
-# 每次提交前，检查 Git 索引中的大文件和常见凭据模式
-git add .
-python scripts/check_repository.py
-```
-
-后续建议把挑选后的可复用模型放到 Hugging Face 模型仓库；训练数据单独管理，完整备份继续存放在备份盘或对象存储。具体步骤见 [存储说明](docs/storage.md)。
+研究代码基于 [GenSAR](https://github.com/TengShi-RUC/GenSAR) 等项目，保留历史目录拼写与两份不同修改的 GenSAR 副本。上游版本和使用范围见[第三方来源](docs/third-party.md)。
