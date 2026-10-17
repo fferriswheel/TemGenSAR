@@ -55,10 +55,10 @@ flowchart LR
 
 ## 模型与数据
 
-精选的 **10 个 MovieLens-25M T5-small checkpoint** 与配套 SID 已上传至 [Hugging Face：Ferriswheel1412/TemGenSAR-MovieLens25M](https://huggingface.co/Ferriswheel1412/TemGenSAR-MovieLens25M)。模型仓库目前为**私有**，访问需要账号权限；GitHub 公开代码不自动授予模型访问权。
+精选的 **10 个 MovieLens-25M T5-small checkpoint** 与配套 SID 已上传至 [Hugging Face：Ferriswheel1412/TemGenSAR-MovieLens25M](https://huggingface.co/Ferriswheel1412/TemGenSAR-MovieLens25M)。模型仓库现已**公开**，可无需登录下载模型与配套 SID。
 
 - 模型：共同 t0、Frozen / TASR-A / TASR-B 各 3 seed。
-- 固定 revision：`947652476014c1a04ba6b3d59e27896b7adc804d`。
+- 固定 revision：`803fbdc690e8d80f5f2b4450bb2838c96c26530a`。
 - 配套资产：SID checkpoint、部署映射、item catalog、汇总指标与校验清单。
 - [模型目录与下载示例](docs/model-selection.md)；[数据依赖与可复现范围](docs/storage.md)。
 

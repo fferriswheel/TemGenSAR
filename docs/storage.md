@@ -5,7 +5,7 @@
 | 内容 | 位置与可用性 |
 | --- | --- |
 | 源码、研究文档、配置与选定汇总指标 | 本 GitHub 仓库 |
-| 10 个 MovieLens checkpoint、对应 SID 与 item catalog | [Hugging Face 模型仓库](https://huggingface.co/Ferriswheel1412/TemGenSAR-MovieLens25M)，目前私有，需账号权限 |
+| 10 个 MovieLens checkpoint、对应 SID 与 item catalog | [Hugging Face 模型仓库](https://huggingface.co/Ferriswheel1412/TemGenSAR-MovieLens25M)，公开，可匿名下载 |
 | 原始交互、用户映射、预处理数据与 embedding | 未随代码或 HF 模型包分发；复现实验需准备对应数据 |
 | 其他历史模型、逐样本预测与完整运行日志 | 历史归档，未作为公开下载资源发布 |
 

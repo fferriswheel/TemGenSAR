@@ -1,7 +1,7 @@
 {
   "status": "uploaded_and_verified",
   "repo_id": "Ferriswheel1412/TemGenSAR-MovieLens25M",
-  "private": true,
+  "private": false,
   "release_id": "9c8014f372b3f88777d175a6bff9dcb90dfba365e4f46858f6806f8f47513ca0",
   "snapshot_date": "2026-09-08",
   "models": [
@@ -137,11 +137,18 @@
     }
   ],
   "upload_files": 90,
-  "total_size_bytes": 2608847143,
+  "total_size_bytes": 2608847654,
   "selection_report": "docs/model-selection.md",
   "validation_scope": "Artifact consistency and one local load/forward pass; historical ranking metrics were read from saved results, not recomputed.",
-  "revision": "947652476014c1a04ba6b3d59e27896b7adc804d",
+  "revision": "803fbdc690e8d80f5f2b4450bb2838c96c26530a",
   "url": "https://huggingface.co/Ferriswheel1412/TemGenSAR-MovieLens25M",
   "verified_files": 90,
-  "uploaded_on": "2026-10-15"
+  "uploaded_on": "2026-10-15",
+  "original_weights_revision": "947652476014c1a04ba6b3d59e27896b7adc804d",
+  "published_on": "2026-10-17",
+  "anonymous_access_verified": true,
+  "publication_changes": [
+    "README.md",
+    "SHA256SUMS"
+  ]
 }

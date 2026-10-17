@@ -2,16 +2,18 @@
 
 ## Hugging Face 版本
 
-MovieLens-25M 模型与配套 SID 已发布至 [Ferriswheel1412/TemGenSAR-MovieLens25M](https://huggingface.co/Ferriswheel1412/TemGenSAR-MovieLens25M)。仓库目前为**私有**，下载需要具有访问权限的 Hugging Face 账号。
+MovieLens-25M 模型与配套 SID 已发布至 [Ferriswheel1412/TemGenSAR-MovieLens25M](https://huggingface.co/Ferriswheel1412/TemGenSAR-MovieLens25M)。仓库已于 **2026-10-17 公开**，模型与配套 SID 可无需登录下载。
 
 | 项目 | 内容 |
 | --- | --- |
 | 实验快照 | 2026-09-08 |
 | 模型上传 | 2026-10-15 |
-| 固定 revision | `947652476014c1a04ba6b3d59e27896b7adc804d` |
-| 规模 | 10 个 T5-small checkpoint；共 90 个文件，2,608,847,143 bytes（约 2.43 GiB） |
+| 固定 revision | `803fbdc690e8d80f5f2b4450bb2838c96c26530a` |
+| 规模 | 10 个 T5-small checkpoint；共 90 个文件，2,608,847,654 bytes（约 2.43 GiB） |
 | 注册表 | [selected_models.json](../assets/selected_models.json) |
 | 验证 | 远端逐文件大小及 LFS SHA-256 / Git blob 哈希验证通过 |
+
+公开版本只更新了模型卡与对应校验清单；全部 checkpoint、SID 与评估文件保持不变。原权重版本为 `947652476014c1a04ba6b3d59e27896b7adc804d`，当前下载固定到表中的公开文档版本。
 
 ## Checkpoint 目录
 
@@ -28,15 +30,15 @@ TASR-B 为当前主候选，A 为较少 SID 可训练参数的对照。B 相对 
 
 ## 下载示例
 
-安装 `huggingface_hub` 并使用有权限的账号执行 `hf auth login`。按需下载主候选及配套 SID：
+安装 `huggingface_hub` 后即可匿名下载。以下示例获取主候选及配套 SID：
 
 ```python
 from huggingface_hub import snapshot_download
 
 release_dir = snapshot_download(
     repo_id="Ferriswheel1412/TemGenSAR-MovieLens25M",
-    revision="947652476014c1a04ba6b3d59e27896b7adc804d",
-    token=True,
+    revision="803fbdc690e8d80f5f2b4450bb2838c96c26530a",
+    token=False,
     local_dir="TemGenSAR-selected",
     allow_patterns=[
         "models/tasr-b/seed-42/*",
