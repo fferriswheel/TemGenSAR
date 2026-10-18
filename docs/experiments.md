@@ -187,6 +187,19 @@ KuaiSAR 包含真实搜索与推荐日志，但观察时间约九天，所选 it
 
 [来源：MovieLens 严格对照与三 seed 复验](../Search_Reconmendation/files/PhaseSummary/阶段19_TASR两种时序更新实验_2026-09-08.md) · [完整指标](../Search_Reconmendation/stage3/results/movielens25m_tasr_strict_w1_w2_three_seed/model_metrics.csv)
 
+### 补充：Amazon 连续更新能否保持单窗口收益？
+
+早期推荐单窗口约 +7.99% 的收益，并未自动延续到长期。修正数据物化口径后的九窗口联合更新，搜索使用持续人工变化，推荐使用自然时间变化；三组每轮都继续训练下游 T5，再评估下一窗口。
+
+| 策略 | 九窗口平均推荐 nDCG@10 | 九窗口平均搜索 nDCG@10 |
+| --- | ---: | ---: |
+| 固定编码 + 持续下游训练 | **0.024352** | 0.031124 |
+| 选择性更新两任务后缀 | 0.024321 | **0.031977** |
+
+相对固定编码，推荐约 −0.13%、搜索约 +2.74%，因此联合平均改善主要来自搜索。这是同一随机种子的连续轨迹，九个相关窗口不能替代九次独立训练。后续三个代表窗口的多种子检查与稳定性修正，也没有消除推荐相对固定编码的退化。
+
+[九窗口协议与修正记录](../Search_Reconmendation/files/PhaseSummary/阶段7_R3_MultiWindowRolling_2026-09-03.md) · [机器可读汇总](../Search_Reconmendation/stage3/results/temporal_rolling_r3_summary/summary.json) · [后续多种子检查](../Search_Reconmendation/files/PhaseSummary/阶段8_R4_三Seed稳定性_2026-09-03.md)
+
 ## 7. 这些实验怎样引出下一步改进？
 
 | 已观察到的问题 | 下一步研究 |
