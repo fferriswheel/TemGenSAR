@@ -74,10 +74,10 @@ SID 阶段的主要训练目标如下。具体权重和组合随实验版本不�
 使用自回归监督训练：给出正确的前面 token，预测下一个 token。主要 loss 是序列交叉熵：
 
 ```math
-L_{\mathrm{CE}}=-\operatorname{mean}_{t\in\mathrm{valid}}\log p(y_t\mid x,y_{<t})
+L_{\mathrm{CE}}=-\frac{1}{|V|}\sum_{t\in V}\log p(y_t\mid x,y_{<t})
 ```
 
-这里 x 是查询、历史和任务提示，y 是正确输出。**nDCG 用于验证和评估，不是当前 T5 的直接训练 loss。**
+这里 x 是查询、历史和任务提示，y 是正确输出；V 是有效标签 token 的位置集合，|V| 是这些位置的数量，分数与求和表示对它们取平均。**nDCG 用于验证和评估，不是当前 T5 的直接训练 loss。**
 
 推理时，模型在有效 SID 路径中逐步生成，再查映射表得到 item。到此完成初始模型训练。
 
@@ -110,11 +110,11 @@ L_{\mathrm{CE}}=-\operatorname{mean}_{t\in\mathrm{valid}}\log p(y_t\mid x,y_{<t}
 
 ```math
 L=L_{\mathrm{CE}}+
-0.1T^2\operatorname{mean}_{t\in\mathcal{M}}
-D_{\mathrm{KL}}\left(q_T^{(t)}\Vert p_T^{(t)}\right),\qquad T=2
+\frac{0.1T^2}{|M|}\sum_{t\in M}
+D_{\mathrm{KL}}(q_T^{(t)}\Vert p_T^{(t)}),\qquad T=2
 ```
 
-q 是旧教师，p 是更新中的学生；M 表示保留蒸馏的稳定样本中的有效 token 位置，若没有这些位置则蒸馏项为零。KL 方向为 **teacher‖student（forward KL）**。交叉熵学习数据中的正确答案，蒸馏用教师的概率分布保留旧判断。
+q 是旧教师，p 是更新中的学生；M 是保留蒸馏的稳定样本中的有效 token 位置集合，|M| 是其数量，若 M 为空则蒸馏项为零。KL 方向为 **teacher‖student（forward KL）**。交叉熵学习数据中的正确答案，蒸馏用教师的概率分布保留旧判断。
 
 当前教师和学生读取相同编码输入，并沿正确标签序列训练；目标或推荐历史涉及换码时，关闭整条样本的蒸馏。它尚未让教师读旧历史、学生读新历史，也未使用学生自己生成的轨迹，因此 **当前不是 on-policy distillation（OPD）**。相关改进见下文与[研究计划](docs/roadmap.md)。
 
